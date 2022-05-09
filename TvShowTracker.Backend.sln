@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3EA470FF-B66A-400C-929F-D01C462F1FB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Api", "TvShowTracker.Api\TvShowTracker.Api.csproj", "{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Shared", "TvShowTracker.Shared\TvShowTracker.Shared.csproj", "{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.DataAccessLayer", "TvShowTracker.DataAccessLayer\TvShowTracker.DataAccessLayer.csproj", "{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FAFE8B35-E684-4280-949C-F5A61C72BA94}
+	EndGlobalSection
+EndGlobal
