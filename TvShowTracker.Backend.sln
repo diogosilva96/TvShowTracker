@@ -7,9 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3EA470FF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Api", "TvShowTracker.Api\TvShowTracker.Api.csproj", "{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Shared", "TvShowTracker.Shared\TvShowTracker.Shared.csproj", "{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.DataAccessLayer", "TvShowTracker.DataAccessLayer\TvShowTracker.DataAccessLayer.csproj", "{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Domain", "TvShowTracker.Domain\TvShowTracker.Domain.csproj", "{2442A3D7-FBDD-4CB5-BC71-30CA50ED787A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Infrastructure", "TvShowTracker.Infrastructure\TvShowTracker.Infrastructure.csproj", "{B6F65456-4EA6-492F-89BE-74CDD0453E25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,14 +23,18 @@ Global
 		{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2108F5A6-13F3-46D0-95D6-A0418F58B3A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2442A3D7-FBDD-4CB5-BC71-30CA50ED787A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2442A3D7-FBDD-4CB5-BC71-30CA50ED787A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2442A3D7-FBDD-4CB5-BC71-30CA50ED787A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2442A3D7-FBDD-4CB5-BC71-30CA50ED787A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6F65456-4EA6-492F-89BE-74CDD0453E25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6F65456-4EA6-492F-89BE-74CDD0453E25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6F65456-4EA6-492F-89BE-74CDD0453E25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6F65456-4EA6-492F-89BE-74CDD0453E25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
