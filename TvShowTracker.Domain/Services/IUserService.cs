@@ -12,8 +12,8 @@ namespace TvShowTracker.Domain.Services
         public Task<Result<UserDto>> RegisterAsync(RegisterUserDto registerUser);
         public Task<Result<IEnumerable<TvShowDto>>> GetFavoriteShowsAsync(int userId);
 
-        public Task<Result<bool>> AddFavoriteShowAsync(int userId, int showId);
+        public Task<Result<bool>> AddFavoriteShowsAsync(int userId, IEnumerable<int> showIds);
 
-        public Task<Result<bool>> RemoveFavoriteShowAsync(int userId, int showId);
+        public Task<Result<bool>> RemoveFavoriteShowsAsync(int userId, IEnumerable<int> showIds);
     }
 }

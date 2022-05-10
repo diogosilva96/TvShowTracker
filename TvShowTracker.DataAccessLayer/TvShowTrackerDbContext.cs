@@ -15,6 +15,8 @@ namespace TvShowTracker.DataAccessLayer
         public DbSet<Episode> Episodes { get; set; }
         public DbSet<Genre> Genres { get; set; }
 
+        public DbSet<Role> Roles { get; set; }
+
         public TvShowTrackerDbContext(DbContextOptions<TvShowTrackerDbContext> options) : base(options)
         { }
 

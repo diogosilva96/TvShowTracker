@@ -14,6 +14,7 @@ using TvShowTracker.DataAccessLayer.Models;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
 using TvShowTracker.Infrastructure.Helpers;
+using Role = TvShowTracker.Domain.Enums.Role;
 
 namespace TvShowTracker.Infrastructure.Services
 {
@@ -51,6 +52,12 @@ namespace TvShowTracker.Infrastructure.Services
                     return ResultHelper.ToErrorResult<UserDto>(new List<string>() { "Email is already in use." });
                 }
                 var dbUser = _mapper.Map<User>(user);
+                // add user role by default
+                var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name.ToLower() == Role.User.ToString().ToLower());
+                if (userRole is not null)
+                {
+                    dbUser.RoleId = userRole.Id;
+                }
                 //dbUser.IsActive = true;
                 _context.Add(dbUser);
 
@@ -185,7 +192,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        public async Task<Result<bool>> AddFavoriteShowAsync(int userId,int showId)
+        public async Task<Result<bool>> AddFavoriteShowsAsync(int userId, IEnumerable<int> showIds)
         {
             try
             {
@@ -195,18 +202,19 @@ namespace TvShowTracker.Infrastructure.Services
                    return ResultHelper.ToSuccessResult(false);
                 }
 
-                if (user.FavoriteShows.Any(s => s.Id == showId))
+                if (user.FavoriteShows.All(s => showIds.Contains(s.Id)))
                 {
                     return ResultHelper.ToSuccessResult(true);
                 }
 
-                var show = await _context.Shows.FirstOrDefaultAsync(s => s.Id == showId);
-                if (show is null)
+                var showsToAdd = await _context.Shows
+                                                           .Where(s => showIds.Contains(s.Id) && s.FavoriteUsers.All(u => u.Id != userId))
+                                                           .ToListAsync();
+                if (!showsToAdd.Any())
                 {
-                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "Show not found" });
+                    return ResultHelper.ToSuccessResult(true);
                 }
-
-                user.FavoriteShows.Add(show);
+                showsToAdd.ForEach(s => user.FavoriteShows.Add(s));
                 await _context.SaveChangesAsync();
                 return ResultHelper.ToSuccessResult(true);
             }
@@ -217,23 +225,24 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        public async Task<Result<bool>> RemoveFavoriteShowAsync(int userId, int showId)
+        public async Task<Result<bool>> RemoveFavoriteShowsAsync(int userId, IEnumerable<int> showIds)
         {
             try
             {
                 var user = await GetByIdInternalAsync(userId);
+
                 if (user is null)
                 {
                     return ResultHelper.ToSuccessResult(false);
                 }
 
-                var show = user.FavoriteShows.FirstOrDefault(s => s.Id == showId);
-                if (show is null)
+                var showsToRemove = user.FavoriteShows.Where(s => showIds.Contains(s.Id)).ToList();
+                if (!showsToRemove.Any())
                 {
                     return ResultHelper.ToSuccessResult(true);
                 }
 
-                user.FavoriteShows.Remove(show);
+                showsToRemove.ForEach(s => user.FavoriteShows.Remove(s));
                 await _context.SaveChangesAsync();
                 return ResultHelper.ToSuccessResult(true);
             }

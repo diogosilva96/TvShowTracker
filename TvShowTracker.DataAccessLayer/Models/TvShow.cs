@@ -25,6 +25,8 @@ namespace TvShowTracker.DataAccessLayer.Models
 
         public ICollection<Genre> Genres { get; set; }
 
+        public ICollection<User> FavoriteUsers { get; set; }
+
         public bool? IsActive { get; set; }
     }
 }

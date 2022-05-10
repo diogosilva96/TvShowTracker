@@ -7,7 +7,6 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using TvShowTracker.Api;
-using TvShowTracker.Api.Models;
 using TvShowTracker.DataAccessLayer;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;

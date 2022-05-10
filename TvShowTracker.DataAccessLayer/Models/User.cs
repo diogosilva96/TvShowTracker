@@ -28,6 +28,11 @@ namespace TvShowTracker.DataAccessLayer.Models
 
         public ICollection<TvShow> FavoriteShows { get; set; }
 
+        public Role? Role { get; set; }
+
+        [ForeignKey(nameof(Role))]
+        public int? RoleId { get; set; }
+
         public bool? IsActive { get; set; }
     }
 }

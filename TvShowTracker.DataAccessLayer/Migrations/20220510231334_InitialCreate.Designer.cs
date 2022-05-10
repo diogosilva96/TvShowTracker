@@ -12,7 +12,7 @@ using TvShowTracker.DataAccessLayer;
 namespace TvShowTracker.DataAccessLayer.Migrations
 {
     [DbContext(typeof(TvShowTrackerDbContext))]
-    [Migration("20220510215110_InitialCreate")]
+    [Migration("20220510231334_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,6 +163,23 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                     b.ToTable("Genres");
                 });
 
+            modelBuilder.Entity("TvShowTracker.DataAccessLayer.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("TvShowTracker.DataAccessLayer.Models.TvShow", b =>
                 {
                     b.Property<int>("Id")
@@ -194,12 +211,7 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Shows");
                 });
@@ -247,9 +259,29 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getutcdate()");
 
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TvShowUser", b =>
+                {
+                    b.Property<int>("FavoriteShowsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FavoriteUsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FavoriteShowsId", "FavoriteUsersId");
+
+                    b.HasIndex("FavoriteUsersId");
+
+                    b.ToTable("TvShowUser");
                 });
 
             modelBuilder.Entity("ActorTvShow", b =>
@@ -293,21 +325,38 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                     b.Navigation("Show");
                 });
 
-            modelBuilder.Entity("TvShowTracker.DataAccessLayer.Models.TvShow", b =>
+            modelBuilder.Entity("TvShowTracker.DataAccessLayer.Models.User", b =>
                 {
+                    b.HasOne("TvShowTracker.DataAccessLayer.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("TvShowUser", b =>
+                {
+                    b.HasOne("TvShowTracker.DataAccessLayer.Models.TvShow", null)
+                        .WithMany()
+                        .HasForeignKey("FavoriteShowsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TvShowTracker.DataAccessLayer.Models.User", null)
-                        .WithMany("FavoriteShows")
-                        .HasForeignKey("UserId");
+                        .WithMany()
+                        .HasForeignKey("FavoriteUsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TvShowTracker.DataAccessLayer.Models.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("TvShowTracker.DataAccessLayer.Models.TvShow", b =>
                 {
                     b.Navigation("Episodes");
-                });
-
-            modelBuilder.Entity("TvShowTracker.DataAccessLayer.Models.User", b =>
-                {
-                    b.Navigation("FavoriteShows");
                 });
 #pragma warning restore 612, 618
         }

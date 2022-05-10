@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using TvShowTracker.Api.Models;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
 using TvShowTracker.Infrastructure.Helpers;
@@ -21,7 +20,7 @@ namespace TvShowTracker.Api.Controllers
         }
 
         [HttpGet("api/v1/[controller]")]
-        public async Task<Result<IEnumerable<UserDto>>> GetAllAsync(int page, int size)
+        public async Task<Result<IEnumerable<UserDto>>> GetAllAsync(int page = 0, int size = 50)
         {
             return await _userService.GetAllAsync(page, size);
         }

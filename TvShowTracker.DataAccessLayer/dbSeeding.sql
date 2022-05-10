@@ -6,4 +6,5 @@ INSERT INTO Genres (Name,Description,IsActive) VALUES ('Drama','Drama',1)
 INSERT INTO Genres (Name,Description,IsActive) VALUES ('Fantasy','Fantasy',1)
 INSERT INTO Genres (Name,Description,IsActive) VALUES ('Horror','Horror',1)
 INSERT INTO Genres (Name,Description,IsActive) VALUES ('Science Fiction','Science Fiction',1)
+INSERT INTO Roles (Name) VALUES ('User')
 go

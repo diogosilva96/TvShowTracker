@@ -7,7 +7,6 @@ namespace TvShowTracker.Infrastructure.MappingProfile;
 
 public class MappingProfile : Profile
 {
-
     public MappingProfile(IHashingService hashingService)
     {
         // TODO: the IHashingService injection should probably be on custom value resolver, and not injected directly on the profile
@@ -17,7 +16,8 @@ public class MappingProfile : Profile
                                                                     : hashingService.Decode(source.Id)));
         CreateMap<User, UserDto>().ForMember(destination => destination.Id,
                                              opt => opt.MapFrom(source => hashingService.Encode(source.Id)))
-                                  .ForMember( destination => destination.Password, opt => opt.Ignore());
+                                  .ForMember(destination => destination.Password, opt => opt.Ignore());
+                                  
 
         CreateMap<ActorDto, Actor>().ForMember(destination => destination.Id,
                                                opt => opt.MapFrom(source => source.Id == null
