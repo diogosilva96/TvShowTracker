@@ -27,6 +27,9 @@ namespace TvShowTracker.DataAccessLayer.Models
 
         public TvShow Show { get; set; }
 
+        [ForeignKey(nameof(Show))]
+        public int ShowId { get; set; }
+
         public bool IsActive { get; set; }
     }
 }

@@ -17,6 +17,6 @@ namespace TvShowTracker.Domain.Services
 
         public Task<Result<bool>> DeactivateAsync(int id);
 
-        public Task<Result<IEnumerable<T>>> GetAllAsync();
+        public Task<Result<IEnumerable<T>>> GetAllAsync(int? page = null, int? size = null);
     }
 }

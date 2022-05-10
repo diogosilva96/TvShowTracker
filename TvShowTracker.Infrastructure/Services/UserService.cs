@@ -8,6 +8,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using TvShowTracker.DataAccessLayer;
 using TvShowTracker.DataAccessLayer.Models;
 using TvShowTracker.Domain.Models;
@@ -58,7 +59,7 @@ namespace TvShowTracker.Infrastructure.Services
         {
             try
             {
-                if (user.Id == null)
+                if (user.Id is null)
                 {
                     return ResultHelper.ToErrorResult<UserDto>(new List<string>() { "User not found." });
                 }
@@ -79,7 +80,7 @@ namespace TvShowTracker.Infrastructure.Services
                 _context.Users.Update(dbUser);
                 await _context.SaveChangesAsync();
 
-                return ResultHelper.ToSuccessResult(_mapper.Map<UserDto>(dbUser));
+                return ResultHelper.ToSuccessResult<UserDto>(_mapper.Map<UserDto>(dbUser));
             }
             catch (Exception ex)
             {
@@ -96,16 +97,16 @@ namespace TvShowTracker.Infrastructure.Services
 
         private async Task<User?> GetByIdInternalAsync(int id)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.IsActive && u.Id == id);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
         public async Task<Result<bool>> DeactivateAsync(int id)
         {
             try
             {
                 var user = await GetByIdInternalAsync(id);
-                if (user == null)
+                if (user is null)
                 {
-                    ResultHelper.ToErrorResult<bool>(new List<string>() { "User not found." });
+                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "User not found." });
                 }
 
                 user.IsActive = false;
@@ -119,12 +120,27 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        public async Task<Result<IEnumerable<UserDto>>> GetAllAsync()
+        public async Task<Result<IEnumerable<UserDto>>> GetAllAsync(int? page = null, int? size = null)
         {
             try
             {
-                var users = await _context.Users.Where(u => u.IsActive).ToListAsync();
-                var userDtos = users.Select(u => _mapper.Map<UserDto>(u));
+                List<User>? users = null;
+                if (size is null && page is not null)
+                {
+                    return ResultHelper.ToErrorResult<IEnumerable<UserDto>>(new List<string>() { "Size should not be null when page is not null." });
+                }
+
+                if (page is null && size is null)
+                {
+                    users = await _context.Users.OrderBy(u => u.Id).ToListAsync();
+                }
+
+                if (size is not null && page is not null)
+                {
+                    users = await _context.Users.OrderBy(u=> u.Id).Skip(page.Value*size.Value).Take(size.Value).ToListAsync();
+                }
+                
+                var userDtos = users is not null ? users.Select(u => _mapper.Map<UserDto>(u)) : Enumerable.Empty<UserDto>();
                 return ResultHelper.ToSuccessResult(userDtos);
             }
             catch (Exception ex)
@@ -134,19 +150,84 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        public Task<IEnumerable<TvShowDto>> GetFavoriteShowsAsync(int userId)
+        public async Task<Result<IEnumerable<TvShowDto>>> GetFavoriteShowsAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await GetByIdInternalAsync(id);
+                if (user is null)
+                {
+                    ResultHelper.ToSuccessResult(Enumerable.Empty<TvShowDto>());
+                }
+
+                var shows = user.FavoriteShows.Select(s => _mapper.Map<TvShowDto>(s));
+                return ResultHelper.ToSuccessResult(shows);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return ResultHelper.ToErrorResult<IEnumerable<TvShowDto>>(new List<string>() { ex.ToString() });
+            }
         }
 
-        public Task<bool> AddFavoriteShowAsync(int showId)
+
+        public async Task<Result<bool>> AddFavoriteShowAsync(int userId,int showId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await GetByIdInternalAsync(userId);
+                if (user is null)
+                {
+                   return ResultHelper.ToSuccessResult(false);
+                }
+
+                if (user.FavoriteShows.Any(s => s.Id == showId))
+                {
+                    return ResultHelper.ToSuccessResult(true);
+                }
+
+                var show = await _context.Shows.FirstOrDefaultAsync(s => s.Id == showId);
+                if (show is null)
+                {
+                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "Show not found" });
+                }
+
+                user.FavoriteShows.Add(show);
+                await _context.SaveChangesAsync();
+                return ResultHelper.ToSuccessResult(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return ResultHelper.ToErrorResult<bool>(new List<string>(){ ex.ToString() });
+            }
         }
 
-        public Task<bool> RemoveFavoriteShowAsync(int showId)
+        public async Task<Result<bool>> RemoveFavoriteShowAsync(int userId, int showId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await GetByIdInternalAsync(userId);
+                if (user is null)
+                {
+                    return ResultHelper.ToSuccessResult(false);
+                }
+
+                var show = user.FavoriteShows.FirstOrDefault(s => s.Id == showId);
+                if (show is null)
+                {
+                    return ResultHelper.ToSuccessResult(true);
+                }
+
+                user.FavoriteShows.Remove(show);
+                await _context.SaveChangesAsync();
+                return ResultHelper.ToSuccessResult(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return ResultHelper.ToErrorResult<bool>(new List<string>() { ex.ToString() });
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ using TvShowTracker.DataAccessLayer;
 namespace TvShowTracker.DataAccessLayer.Migrations
 {
     [DbContext(typeof(TvShowTrackerDbContext))]
-    [Migration("20220509201734_InitialCreate")]
+    [Migration("20220510191542_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,9 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -96,11 +99,17 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Number")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ReleasedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Season")
+                        .HasColumnType("int");
 
                     b.Property<int>("ShowId")
                         .HasColumnType("int");
@@ -134,6 +143,9 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -155,6 +167,9 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                     b.Property<DateTime?>("AddedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("ReleasedAt")
                         .HasColumnType("datetime2");
@@ -196,6 +211,9 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastLoginAt")
                         .HasColumnType("datetime2");
