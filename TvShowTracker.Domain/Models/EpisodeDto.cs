@@ -8,7 +8,7 @@ namespace TvShowTracker.Domain.Models
 {
     public class EpisodeDto
     {
-        public int? Id { get; set; }
+        public string? Id { get; set; }
 
         public string Title { get; set; }
 

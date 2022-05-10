@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TvShowTracker.DataAccessLayer.Models
 {
@@ -31,10 +26,8 @@ namespace TvShowTracker.DataAccessLayer.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? LastUpdatedAt { get; set; }
 
-        public DateTime? LastLoginAt { get; set; }
-
         public ICollection<TvShow> FavoriteShows { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
     }
 }

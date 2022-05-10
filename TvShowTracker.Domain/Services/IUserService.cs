@@ -9,6 +9,7 @@ namespace TvShowTracker.Domain.Services
 {
     public interface IUserService : IGenericService<UserDto>
     {
+        public Task<Result<UserDto>> RegisterAsync(RegisterUserDto registerUser);
         public Task<Result<IEnumerable<TvShowDto>>> GetFavoriteShowsAsync(int userId);
 
         public Task<Result<bool>> AddFavoriteShowAsync(int userId, int showId);

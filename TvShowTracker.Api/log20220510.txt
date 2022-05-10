@@ -1,0 +1,114 @@
+2022-05-10 21:46:32.643 +01:00 [INF] Now listening on: https://localhost:7057
+2022-05-10 21:46:32.669 +01:00 [INF] Now listening on: http://localhost:5057
+2022-05-10 21:46:32.671 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-05-10 21:46:32.672 +01:00 [INF] Hosting environment: Development
+2022-05-10 21:46:32.673 +01:00 [INF] Content root path: C:\Users\diogo\source\repos\TvShowTracker.Backend\TvShowTracker.Api\
+2022-05-10 21:46:33.849 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/swagger/index.html - -
+2022-05-10 21:46:34.054 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/swagger/index.html - - - 200 - text/html;charset=utf-8 206.8522ms
+2022-05-10 21:46:34.079 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/_framework/aspnetcore-browser-refresh.js - -
+2022-05-10 21:46:34.083 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/_framework/aspnetcore-browser-refresh.js - - - 200 11951 application/javascript;+charset=utf-8 4.2789ms
+2022-05-10 21:46:34.153 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/swagger/v1/swagger.json - -
+2022-05-10 21:46:34.215 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 62.1649ms
+2022-05-10 21:46:44.146 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/api/v1/users/asd - -
+2022-05-10 21:46:44.150 +01:00 [INF] Executing endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:46:44.169 +01:00 [INF] Route matched with {action = "GetById", controller = "Users"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetByIdAsync(System.String) on controller TvShowTracker.Api.Controllers.UsersController (TvShowTracker.Api).
+2022-05-10 21:46:44.361 +01:00 [INF] Executed action TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api) in 188.4235ms
+2022-05-10 21:46:44.386 +01:00 [INF] Executed endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:46:44.426 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.MissingMethodException: Cannot dynamically create an instance of type 'TvShowTracker.Infrastructure.MappingProfile.DtoDbMappingProfile'. Reason: No parameterless constructor defined.
+   at System.RuntimeType.ActivatorCache..ctor(RuntimeType rt)
+   at System.RuntimeType.CreateInstanceDefaultCtor(Boolean publicOnly, Boolean wrapExceptions)
+   at System.Activator.CreateInstance(Type type, Boolean nonPublic, Boolean wrapExceptions)
+   at System.Activator.CreateInstance(Type type)
+   at AutoMapper.MapperConfigurationExpression.AddProfile(Type profileType)
+   at AutoMapper.MapperConfigurationExpression.AddMapsCore(IEnumerable`1 assembliesToScan)
+   at AutoMapper.MapperConfigurationExpression.AddMaps(Assembly[] assembliesToScan)
+   at Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.<>c__DisplayClass12_0.<AddAutoMapperClasses>b__6(MapperConfigurationExpression options)
+   at Microsoft.Extensions.Options.ConfigureNamedOptions`1.Configure(String name, TOptions options)
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.<>c.<AddAutoMapperClasses>b__12_2(IServiceProvider sp)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(Type serviceType)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.<>c.<AddAutoMapperClasses>b__12_3(IServiceProvider sp)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.GetService(IServiceProvider sp, Type type, Type requiredBy, Boolean isDefaultParameterRequired)
+   at lambda_method9(Closure , IServiceProvider , Object[] )
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerActivatorProvider.<>c__DisplayClass7_0.<CreateActivator>b__0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2022-05-10 21:46:44.469 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/api/v1/users/asd - - - 500 - text/plain;+charset=utf-8 323.4522ms
+2022-05-10 21:57:14.318 +01:00 [INF] Now listening on: https://localhost:7057
+2022-05-10 21:57:14.347 +01:00 [INF] Now listening on: http://localhost:5057
+2022-05-10 21:57:14.350 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-05-10 21:57:14.351 +01:00 [INF] Hosting environment: Development
+2022-05-10 21:57:14.352 +01:00 [INF] Content root path: C:\Users\diogo\source\repos\TvShowTracker.Backend\TvShowTracker.Api\
+2022-05-10 21:57:15.078 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/swagger/index.html - -
+2022-05-10 21:57:15.267 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/swagger/index.html - - - 200 - text/html;charset=utf-8 190.9767ms
+2022-05-10 21:57:15.268 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/_framework/aspnetcore-browser-refresh.js - -
+2022-05-10 21:57:15.279 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/_framework/aspnetcore-browser-refresh.js - - - 200 11951 application/javascript;+charset=utf-8 10.8996ms
+2022-05-10 21:57:15.347 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/swagger/v1/swagger.json - -
+2022-05-10 21:57:15.416 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 68.1848ms
+2022-05-10 21:57:19.748 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/api/v1/users/ascc - -
+2022-05-10 21:57:19.752 +01:00 [INF] Executing endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:19.769 +01:00 [INF] Route matched with {action = "GetById", controller = "Users"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetByIdAsync(System.String) on controller TvShowTracker.Api.Controllers.UsersController (TvShowTracker.Api).
+2022-05-10 21:57:20.048 +01:00 [INF] Executing NotFoundObjectResult, writing value of type 'null'.
+2022-05-10 21:57:20.052 +01:00 [INF] Executed action TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api) in 279.3247ms
+2022-05-10 21:57:20.054 +01:00 [INF] Executed endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:20.055 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/api/v1/users/ascc - - - 404 0 - 307.8022ms
+2022-05-10 21:57:24.821 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/api/v1/users/ascc - -
+2022-05-10 21:57:24.821 +01:00 [INF] Executing endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:24.822 +01:00 [INF] Route matched with {action = "GetById", controller = "Users"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetByIdAsync(System.String) on controller TvShowTracker.Api.Controllers.UsersController (TvShowTracker.Api).
+2022-05-10 21:57:24.847 +01:00 [INF] Executing NotFoundObjectResult, writing value of type 'null'.
+2022-05-10 21:57:24.848 +01:00 [INF] Executed action TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api) in 24.9176ms
+2022-05-10 21:57:24.849 +01:00 [INF] Executed endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:24.850 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/api/v1/users/ascc - - - 404 0 - 28.9427ms
+2022-05-10 21:57:25.599 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/api/v1/users/ascc - -
+2022-05-10 21:57:25.599 +01:00 [INF] Executing endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:25.600 +01:00 [INF] Route matched with {action = "GetById", controller = "Users"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetByIdAsync(System.String) on controller TvShowTracker.Api.Controllers.UsersController (TvShowTracker.Api).
+2022-05-10 21:57:25.622 +01:00 [INF] Executing NotFoundObjectResult, writing value of type 'null'.
+2022-05-10 21:57:25.623 +01:00 [INF] Executed action TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api) in 21.828ms
+2022-05-10 21:57:25.624 +01:00 [INF] Executed endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:25.625 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/api/v1/users/ascc - - - 404 0 - 25.9040ms
+2022-05-10 21:57:26.159 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/api/v1/users/ascc - -
+2022-05-10 21:57:26.162 +01:00 [INF] Executing endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:26.162 +01:00 [INF] Route matched with {action = "GetById", controller = "Users"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetByIdAsync(System.String) on controller TvShowTracker.Api.Controllers.UsersController (TvShowTracker.Api).
+2022-05-10 21:57:26.184 +01:00 [INF] Executing NotFoundObjectResult, writing value of type 'null'.
+2022-05-10 21:57:26.184 +01:00 [INF] Executed action TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api) in 20.4286ms
+2022-05-10 21:57:26.185 +01:00 [INF] Executed endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:26.186 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/api/v1/users/ascc - - - 404 0 - 26.3815ms
+2022-05-10 21:57:29.367 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7057/api/v1/users/asc - -
+2022-05-10 21:57:29.368 +01:00 [INF] Executing endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:29.370 +01:00 [INF] Route matched with {action = "GetById", controller = "Users"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetByIdAsync(System.String) on controller TvShowTracker.Api.Controllers.UsersController (TvShowTracker.Api).
+2022-05-10 21:57:29.392 +01:00 [INF] Executing NotFoundObjectResult, writing value of type 'null'.
+2022-05-10 21:57:29.392 +01:00 [INF] Executed action TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api) in 21.1292ms
+2022-05-10 21:57:29.393 +01:00 [INF] Executed endpoint 'TvShowTracker.Api.Controllers.UsersController.GetByIdAsync (TvShowTracker.Api)'
+2022-05-10 21:57:29.394 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7057/api/v1/users/asc - - - 404 0 - 26.4933ms

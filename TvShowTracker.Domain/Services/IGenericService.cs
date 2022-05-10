@@ -9,8 +9,6 @@ namespace TvShowTracker.Domain.Services
 {
     public interface IGenericService<T> where T : class
     {
-        public Task<Result<T>> CreateAsync(T target);
-
         public Task<Result<T>> UpdateAsync(T target);
 
         public Task<Result<T>> GetByIdAsync(int id);

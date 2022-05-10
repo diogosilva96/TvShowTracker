@@ -72,8 +72,10 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<bool?>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("1");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -95,10 +97,13 @@ namespace TvShowTracker.DataAccessLayer.Migrations
 
                     b.Property<DateTime?>("AddedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getutcdate()");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<bool?>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("1");
 
                     b.Property<int>("Number")
                         .HasColumnType("int");
@@ -141,8 +146,10 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<bool?>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("1");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -164,10 +171,13 @@ namespace TvShowTracker.DataAccessLayer.Migrations
 
                     b.Property<DateTime?>("AddedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getutcdate()");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<bool?>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("1");
 
                     b.Property<DateTime?>("ReleasedAt")
                         .HasColumnType("datetime2");
@@ -210,11 +220,10 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastLoginAt")
-                        .HasColumnType("datetime2");
+                    b.Property<bool?>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("1");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -223,7 +232,8 @@ namespace TvShowTracker.DataAccessLayer.Migrations
 
                     b.Property<DateTime?>("LastUpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getutcdate()");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -232,7 +242,8 @@ namespace TvShowTracker.DataAccessLayer.Migrations
 
                     b.Property<DateTime?>("RegisteredAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getutcdate()");
 
                     b.HasKey("Id");
 

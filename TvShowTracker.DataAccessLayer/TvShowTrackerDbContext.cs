@@ -17,5 +17,45 @@ namespace TvShowTracker.DataAccessLayer
 
         public TvShowTrackerDbContext(DbContextOptions<TvShowTrackerDbContext> options) : base(options)
         { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>()
+                        .Property(b => b.RegisteredAt)
+                        .HasDefaultValueSql("getutcdate()");
+
+            modelBuilder.Entity<User>()
+                        .Property(b => b.LastUpdatedAt)
+                        .HasDefaultValueSql("getutcdate()");
+
+            modelBuilder.Entity<TvShow>()
+                        .Property(b => b.AddedAt)
+                        .HasDefaultValueSql("getutcdate()");
+
+            modelBuilder.Entity<Episode>()
+                        .Property(b => b.AddedAt)
+                        .HasDefaultValueSql("getutcdate()");
+
+            modelBuilder.Entity<User>()
+                        .Property(b => b.IsActive)
+                        .HasDefaultValueSql("1");
+
+            modelBuilder.Entity<TvShow>()
+                        .Property(b => b.IsActive)
+                        .HasDefaultValueSql("1");
+
+            modelBuilder.Entity<Episode>()
+                        .Property(b => b.IsActive)
+                        .HasDefaultValueSql("1"); 
+
+            modelBuilder.Entity<Genre>()
+                        .Property(b => b.IsActive)
+                        .HasDefaultValueSql("1");
+
+            modelBuilder.Entity<Actor>()
+                        .Property(b => b.IsActive)
+                        .HasDefaultValueSql("1");
+        }
     }
 }

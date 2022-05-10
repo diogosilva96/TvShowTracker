@@ -19,7 +19,7 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true, defaultValueSql: "1")
                 },
                 constraints: table =>
                 {
@@ -34,7 +34,7 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true, defaultValueSql: "1")
                 },
                 constraints: table =>
                 {
@@ -51,10 +51,9 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    RegisteredAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastLoginAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    RegisteredAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "getutcdate()"),
+                    LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "getutcdate()"),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true, defaultValueSql: "1")
                 },
                 constraints: table =>
                 {
@@ -69,9 +68,9 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Synopsis = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    AddedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AddedAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "getutcdate()"),
                     ReleasedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true, defaultValueSql: "1"),
                     UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -118,10 +117,10 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                     Season = table.Column<int>(type: "int", nullable: false),
                     Number = table.Column<int>(type: "int", nullable: false),
                     Synopsis = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    AddedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AddedAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "getutcdate()"),
                     ReleasedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ShowId = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: true, defaultValueSql: "1")
                 },
                 constraints: table =>
                 {

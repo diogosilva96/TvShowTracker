@@ -20,33 +20,43 @@ namespace TvShowTracker.Infrastructure.Services
     public class UserService : IUserService
     {
         private readonly TvShowTrackerDbContext _context;
-        private readonly IValidator<UserDto> _validator;
+        private readonly IValidator<UserDto> _userValidator;
+        private readonly IValidator<RegisterUserDto> _registerValidator;
         private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
         
-        public UserService(TvShowTrackerDbContext context,IValidator<UserDto> validator, IMapper mapper, ILogger<UserService> logger)
+        public UserService(TvShowTrackerDbContext context,IValidator<UserDto> userUserValidator, IValidator<RegisterUserDto> registerValidator, IMapper mapper, ILogger<UserService> logger)
         {
             _context = context;
-            _validator = validator;
+            _userValidator = userUserValidator;
+            _registerValidator = registerValidator;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<Result<UserDto>> CreateAsync(UserDto user)
+        public async Task<Result<UserDto>> RegisterAsync(RegisterUserDto user)
         {
             try
             {
-                var validationResult = await _validator.ValidateAsync(user);
+                var validationResult = await _registerValidator.ValidateAsync(user);
                 if (!validationResult.IsValid)
                 {
                     return ResultHelper.ToErrorResult<UserDto>(validationResult);
                 }
 
+                var userWithEmailExists =
+                    await _context.Users.AnyAsync(u => u.Email.ToLower() == user.Email.ToLower());
+                if (userWithEmailExists)
+                {
+                    return ResultHelper.ToErrorResult<UserDto>(new List<string>() { "Email is already in use." });
+                }
                 var dbUser = _mapper.Map<User>(user);
+                //dbUser.IsActive = true;
                 _context.Add(dbUser);
 
                 await _context.SaveChangesAsync();
-                return ResultHelper.ToSuccessResult(_mapper.Map<UserDto>(dbUser));
+                var userDto = _mapper.Map<UserDto>(dbUser);
+                return ResultHelper.ToSuccessResult(userDto);
             }
             catch (Exception ex)
             {
@@ -63,8 +73,8 @@ namespace TvShowTracker.Infrastructure.Services
                 {
                     return ResultHelper.ToErrorResult<UserDto>(new List<string>() { "User not found." });
                 }
-
-                var validationResult = await _validator.ValidateAsync(user);
+                
+                var validationResult = await _userValidator.ValidateAsync(user);
 
                 if (!validationResult.IsValid)
                 {
@@ -74,7 +84,12 @@ namespace TvShowTracker.Infrastructure.Services
                 var dbUser = _mapper.Map<User>(user);
                 if (!_context.Users.Any(u => u.Id == dbUser.Id))
                 {
-                    ResultHelper.ToErrorResult<UserDto>(new List<string>() { "User not found." });
+                    return ResultHelper.ToErrorResult<UserDto>(new List<string>() { "User not found." });
+                }
+
+                if (!_context.Users.Any(u => u.Id == dbUser.Id && u.Email.Equals(user.Email, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    return ResultHelper.ToErrorResult<UserDto>(new List<string>() { "Email cannot be changed." });
                 }
 
                 _context.Users.Update(dbUser);
@@ -169,7 +184,6 @@ namespace TvShowTracker.Infrastructure.Services
                 return ResultHelper.ToErrorResult<IEnumerable<TvShowDto>>(new List<string>() { ex.ToString() });
             }
         }
-
 
         public async Task<Result<bool>> AddFavoriteShowAsync(int userId,int showId)
         {

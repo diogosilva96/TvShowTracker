@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace TvShowTracker.DataAccessLayer.Models
 {
@@ -24,6 +21,6 @@ namespace TvShowTracker.DataAccessLayer.Models
 
         public ICollection<TvShow> Shows { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
     }
 }

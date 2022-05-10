@@ -1,28 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using TvShowTracker.DataAccessLayer.Models;
 using TvShowTracker.Domain.Models;
+using TvShowTracker.Domain.Services;
 
-namespace TvShowTracker.Infrastructure.MappingProfile
+namespace TvShowTracker.Infrastructure.MappingProfile;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+
+    public MappingProfile(IHashingService hashingService)
     {
-        public MappingProfile()
-        {
-            CreateMap<UserDto, User>();
-            CreateMap<User, UserDto>();
-            CreateMap<ActorDto, Actor>();
-            CreateMap<Actor, ActorDto>();
-            CreateMap<Genre, GenreDto>();
-            CreateMap<GenreDto, Genre>();
-            CreateMap<Episode,EpisodeDto>();
-            CreateMap<EpisodeDto, Episode>();
-            CreateMap<TvShow, TvShowDto>();
-            CreateMap<TvShowDto, TvShow>();
-        }
+        // TODO: the IHashingService injection should probably be on custom value resolver, and not injected directly on the profile
+        CreateMap<UserDto, User>().ForMember(destination => destination.Id,
+                                             opt => opt.MapFrom(source => source.Id == null
+                                                                    ? null
+                                                                    : hashingService.Decode(source.Id)));
+        CreateMap<User, UserDto>().ForMember(destination => destination.Id,
+                                             opt => opt.MapFrom(source => hashingService.Encode(source.Id)))
+                                  .ForMember( destination => destination.Password, opt => opt.Ignore());
+
+        CreateMap<ActorDto, Actor>().ForMember(destination => destination.Id,
+                                               opt => opt.MapFrom(source => source.Id == null
+                                                                      ? null
+                                                                      : hashingService.Decode(source.Id)));
+        CreateMap<Actor, ActorDto>().ForMember(destination => destination.Id,
+                                               opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
+        CreateMap<Genre, GenreDto>().ForMember(destination => destination.Id,
+                                               opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
+        CreateMap<GenreDto, Genre>().ForMember(destination => destination.Id,
+                                               opt => opt.MapFrom(source => source.Id == null
+                                                                      ? null
+                                                                      : hashingService.Decode(source.Id)));
+        CreateMap<Episode, EpisodeDto>().ForMember(destination => destination.Id,
+                                                   opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
+        CreateMap<EpisodeDto, Episode>().ForMember(destination => destination.Id,
+                                                   opt => opt.MapFrom(source => source.Id == null
+                                                                          ? null
+                                                                          : hashingService.Decode(source.Id)));
+        CreateMap<TvShow, TvShowDto>().ForMember(destination => destination.Id,
+                                                 opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
+        CreateMap<TvShowDto, TvShow>().ForMember(destination => destination.Id,
+                                                 opt => opt.MapFrom(source => source.Id == null
+                                                                        ? null
+                                                                        : hashingService.Decode(source.Id)));
+
+        CreateMap<RegisterUserDto,User>().ForMember(destination => destination.Password, opt => opt.MapFrom(source => BCrypt.Net.BCrypt.HashPassword(source.Password)));
     }
 }
