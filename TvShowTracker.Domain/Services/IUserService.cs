@@ -7,8 +7,12 @@ using TvShowTracker.Domain.Models;
 
 namespace TvShowTracker.Domain.Services
 {
-    public interface IUserService : IGenericService<UserDto> 
+    public interface IUserService : IGenericService<UserDto>
     {
+        public Task<IEnumerable<TvShowDto>> GetFavoriteShowsAsync(int userId);
 
+        public Task<bool> AddFavoriteShowAsync(int showId);
+
+        public Task<bool> RemoveFavoriteShowAsync(int showId);
     }
 }

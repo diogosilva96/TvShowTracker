@@ -133,5 +133,20 @@ namespace TvShowTracker.Infrastructure.Services
                 return ResultHelper.ToErrorResult<IEnumerable<UserDto>>(new List<string>() { ex.ToString() });
             }
         }
+
+        public Task<IEnumerable<TvShowDto>> GetFavoriteShowsAsync(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> AddFavoriteShowAsync(int showId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> RemoveFavoriteShowAsync(int showId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

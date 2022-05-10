@@ -12,6 +12,8 @@ namespace TvShowTracker.Domain.Models
 
         public string Title { get; set; }
 
+        public int Season { get; set; }
+
         public int Number { get; set; }
 
         public string Synopsis { get; set; }
