@@ -12,8 +12,8 @@ namespace TvShowTracker.Infrastructure.Validators
     {
         public TvShowModelValidator()
         {
-            RuleFor(t => t.Title).MinimumLength(2).MaximumLength(100);
-            RuleFor(t => t.Synopsis).MinimumLength(2).MaximumLength(500);
+            RuleFor(t => t.Name).MinimumLength(2).MaximumLength(100);
+            RuleFor(t => t.Description).MinimumLength(2).MaximumLength(500);
             RuleFor(t => t.Genres).NotEmpty();
         }
     }

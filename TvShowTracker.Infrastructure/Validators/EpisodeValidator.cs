@@ -12,8 +12,7 @@ namespace TvShowTracker.Infrastructure.Validators
     {
         public EpisodeValidator()
         {
-            RuleFor(e => e.Title).MinimumLength(2).MaximumLength(100);
-            RuleFor(e => e.Synopsis).MinimumLength(2).MaximumLength(250);
+            RuleFor(e => e.Name).MinimumLength(2).MaximumLength(100);
         }
     }
 }

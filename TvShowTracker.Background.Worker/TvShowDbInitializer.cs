@@ -30,7 +30,6 @@ public class TvShowDbInitializer : BackgroundService
             var dbContext = scope.ServiceProvider.GetRequiredService<TvShowTrackerDbContext>();
             await dbContext.Database.MigrateAsync();
             SeedRoles(dbContext);
-            SeedGenres(dbContext);
             await dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -50,17 +49,4 @@ public class TvShowDbInitializer : BackgroundService
                                              }));
     }
 
-    private void SeedGenres(TvShowTrackerDbContext context)
-    {
-        if (context.Genres.Any()) return;
-
-        var genreList = new List<string>
-            { "Action", "Adventure", "Comedy", "Crime", "Drama", "Horror", "Science Fiction" };
-        context.Genres.AddRange(genreList.Select(genre =>
-                                                     new Genre
-                                                     {
-                                                         Name = genre,
-                                                         Description = genre
-                                                     }));
-    }
 }
