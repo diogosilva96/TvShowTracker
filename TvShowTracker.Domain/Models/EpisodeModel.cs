@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TvShowTracker.Domain.Models
 {
-    public class EpisodeDto
+    public class EpisodeModel
     {
         public string? Id { get; set; }
 
@@ -22,7 +22,7 @@ namespace TvShowTracker.Domain.Models
 
         public DateTime? ReleasedAt { get; set; }
 
-        public TvShowDto Show { get; set; }
+        public TvShowModel Show { get; set; }
 
         public bool IsActive { get; set; }
     }

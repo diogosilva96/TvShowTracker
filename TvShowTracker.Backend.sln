@@ -5,13 +5,15 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3EA470FF-B66A-400C-929F-D01C462F1FB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Api", "TvShowTracker.Api\TvShowTracker.Api.csproj", "{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvShowTracker.Api", "TvShowTracker.Api\TvShowTracker.Api.csproj", "{BFE38AD8-983E-43DE-AD13-FCDD9F5F2207}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.DataAccessLayer", "TvShowTracker.DataAccessLayer\TvShowTracker.DataAccessLayer.csproj", "{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvShowTracker.DataAccessLayer", "TvShowTracker.DataAccessLayer\TvShowTracker.DataAccessLayer.csproj", "{FC734B77-8B3E-4EF5-9BB5-040CE84E6BE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Domain", "TvShowTracker.Domain\TvShowTracker.Domain.csproj", "{2442A3D7-FBDD-4CB5-BC71-30CA50ED787A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvShowTracker.Domain", "TvShowTracker.Domain\TvShowTracker.Domain.csproj", "{2442A3D7-FBDD-4CB5-BC71-30CA50ED787A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Infrastructure", "TvShowTracker.Infrastructure\TvShowTracker.Infrastructure.csproj", "{B6F65456-4EA6-492F-89BE-74CDD0453E25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvShowTracker.Infrastructure", "TvShowTracker.Infrastructure\TvShowTracker.Infrastructure.csproj", "{B6F65456-4EA6-492F-89BE-74CDD0453E25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Background.Worker", "TvShowTracker.Background.Worker\TvShowTracker.Background.Worker.csproj", "{1DB5617A-0CF2-4441-9476-1E3A4B070435}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{B6F65456-4EA6-492F-89BE-74CDD0453E25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6F65456-4EA6-492F-89BE-74CDD0453E25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6F65456-4EA6-492F-89BE-74CDD0453E25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DB5617A-0CF2-4441-9476-1E3A4B070435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DB5617A-0CF2-4441-9476-1E3A4B070435}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DB5617A-0CF2-4441-9476-1E3A4B070435}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DB5617A-0CF2-4441-9476-1E3A4B070435}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

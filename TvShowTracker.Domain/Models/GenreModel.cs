@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TvShowTracker.Domain.Models
 {
-    public class GenreDto
+    public class GenreModel
     {
         public string? Id { get; set; }
 
@@ -14,7 +14,7 @@ namespace TvShowTracker.Domain.Models
 
         public string? Description { get; set; }
 
-        public IEnumerable<TvShowDto> Shows { get; set; }
+        public IEnumerable<TvShowModel> Shows { get; set; }
 
         public bool IsActive { get; set; }
     }

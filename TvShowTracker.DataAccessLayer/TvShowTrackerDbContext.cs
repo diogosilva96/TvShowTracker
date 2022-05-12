@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TvShowTracker.DataAccessLayer.Models;
 
 namespace TvShowTracker.DataAccessLayer
@@ -23,6 +22,7 @@ namespace TvShowTracker.DataAccessLayer
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<User>()
                         .Property(b => b.RegisteredAt)
                         .HasDefaultValueSql("getutcdate()");

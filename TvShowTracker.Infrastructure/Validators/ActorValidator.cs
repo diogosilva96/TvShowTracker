@@ -8,9 +8,9 @@ using TvShowTracker.Domain.Models;
 
 namespace TvShowTracker.Infrastructure.Validators
 {
-    public class ActorDtoValidator : AbstractValidator<ActorDto>
+    public class ActorValidator : AbstractValidator<ActorModel>
     {
-        public ActorDtoValidator()
+        public ActorValidator()
         {
             RuleFor(a => a.BirthDate).LessThan(DateTime.Now);
             RuleFor(a => a.Description).MaximumLength(500);

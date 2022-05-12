@@ -4,7 +4,11 @@ namespace TvShowTracker.Domain.Services
 {
     public interface IAuthenticationService
     {
-        public Task<Result<bool>> CheckCredentialsAsync(AuthenticationRequest credentials);
-        public Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest credentials);
+        /// <summary>
+        /// Authenticates the user based on the provided credentials
+        /// </summary>
+        /// <param name="credentials"></param>
+        /// <returns>The authentication result depending whether the credentials are valid or not</returns>
+        public Task<AuthenticationResult> AuthenticateAsync(LoginModel credentials);
     }
 }

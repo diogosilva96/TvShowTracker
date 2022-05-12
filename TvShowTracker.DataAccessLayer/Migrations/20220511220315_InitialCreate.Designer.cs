@@ -12,7 +12,7 @@ using TvShowTracker.DataAccessLayer;
 namespace TvShowTracker.DataAccessLayer.Migrations
 {
     [DbContext(typeof(TvShowTrackerDbContext))]
-    [Migration("20220510231334_InitialCreate")]
+    [Migration("20220511220315_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -7,7 +7,7 @@ using TvShowTracker.Domain.Models;
 
 namespace TvShowTracker.Domain.Services
 {
-    public interface IActorService : IGenericService<ActorDto>
+    public interface IActorService : IGenericService<ActorModel>
     {
     }
 }

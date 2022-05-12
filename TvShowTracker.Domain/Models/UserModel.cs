@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using TvShowTracker.Domain.Enums;
 
 namespace TvShowTracker.Domain.Models
 {
-    public class UserDto
+    public class UserModel
     {
         public string? Id { get; set; }
 
@@ -25,7 +24,7 @@ namespace TvShowTracker.Domain.Models
 
         public DateTime? LastUpdatedAt { get; set; }
 
-        public IEnumerable<TvShowDto> FavoriteShows { get; set; }
+        public IEnumerable<TvShowModel> FavoriteShows { get; set; }
         public bool IsActive { get; set; }
     }
 }
