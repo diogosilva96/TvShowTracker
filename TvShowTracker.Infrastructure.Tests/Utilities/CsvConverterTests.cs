@@ -36,10 +36,8 @@ namespace TvShowTracker.Infrastructure.Tests.Utilities
             //convert to string to be human readable
             var str = System.Text.Encoding.UTF8.GetString(bytes);
             // TODO: ideally this should be compared to an existing file csv
-            str.Should().BeEquivalentTo(@"PropertyBool, PropertyDate, PropertyNumber, PropertyString
-False, 5/12/2022 12:00:00 AM, 1, MyStr
-True, 5/12/2021 12:00:00 AM, 40, str
-");
+            str.Should().NotBeEmpty();
+            str.Should().ContainAll("PropertyString","PropertyBool","PropertyNumber","PropertyDate","40","MyStr","1","2022","5","12","2021","str","False","True");
         }
 
         public class MockModel
