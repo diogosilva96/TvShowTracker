@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvShowTracker.Infrastructur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvShowTracker.Background.Worker", "TvShowTracker.Background.Worker\TvShowTracker.Background.Worker.csproj", "{1DB5617A-0CF2-4441-9476-1E3A4B070435}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Infrastructure.Tests", "TvShowTracker.Infrastructure.Tests\TvShowTracker.Infrastructure.Tests.csproj", "{AAD9E22E-70A0-4285-B405-7FB5C775F893}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvShowTracker.Api.Tests", "Tests\TvShowTracker.Api.Tests\TvShowTracker.Api.Tests.csproj", "{44C12158-1269-4E44-A37F-3EFD46EE24C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvShowTracker.Api.Tests", "TvShowTracker.Api.Tests\TvShowTracker.Api.Tests.csproj", "{D7D5A887-1000-4D42-A8AE-7BA5982F2F00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvShowTracker.Infrastructure.Tests", "Tests\TvShowTracker.Infrastructure.Tests\TvShowTracker.Infrastructure.Tests.csproj", "{02DAEF5C-6CB8-4BC1-9FDC-06F804496B3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,21 +45,21 @@ Global
 		{1DB5617A-0CF2-4441-9476-1E3A4B070435}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DB5617A-0CF2-4441-9476-1E3A4B070435}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DB5617A-0CF2-4441-9476-1E3A4B070435}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AAD9E22E-70A0-4285-B405-7FB5C775F893}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AAD9E22E-70A0-4285-B405-7FB5C775F893}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AAD9E22E-70A0-4285-B405-7FB5C775F893}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AAD9E22E-70A0-4285-B405-7FB5C775F893}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7D5A887-1000-4D42-A8AE-7BA5982F2F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7D5A887-1000-4D42-A8AE-7BA5982F2F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7D5A887-1000-4D42-A8AE-7BA5982F2F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7D5A887-1000-4D42-A8AE-7BA5982F2F00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C12158-1269-4E44-A37F-3EFD46EE24C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C12158-1269-4E44-A37F-3EFD46EE24C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C12158-1269-4E44-A37F-3EFD46EE24C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C12158-1269-4E44-A37F-3EFD46EE24C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02DAEF5C-6CB8-4BC1-9FDC-06F804496B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02DAEF5C-6CB8-4BC1-9FDC-06F804496B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02DAEF5C-6CB8-4BC1-9FDC-06F804496B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02DAEF5C-6CB8-4BC1-9FDC-06F804496B3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{AAD9E22E-70A0-4285-B405-7FB5C775F893} = {3EA470FF-B66A-400C-929F-D01C462F1FB6}
-		{D7D5A887-1000-4D42-A8AE-7BA5982F2F00} = {3EA470FF-B66A-400C-929F-D01C462F1FB6}
+		{44C12158-1269-4E44-A37F-3EFD46EE24C1} = {3EA470FF-B66A-400C-929F-D01C462F1FB6}
+		{02DAEF5C-6CB8-4BC1-9FDC-06F804496B3E} = {3EA470FF-B66A-400C-929F-D01C462F1FB6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FAFE8B35-E684-4280-949C-F5A61C72BA94}
