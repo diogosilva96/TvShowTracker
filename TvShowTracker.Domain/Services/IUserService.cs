@@ -21,7 +21,7 @@ namespace TvShowTracker.Domain.Services
 
         public Task<Result<bool>> DeactivateAsync(int id , int requesterId);
 
-        Task<Result<IEnumerable<UserModel>>> GetAllAsync(int requesterId, bool isActive, int? page = null, int? size = null);
+        Task<Result<IEnumerable<UserModel>>> GetAllAsync(int requesterId, GetUsersFilter filter);
 
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace TvShowTracker.DataAccessLayer.Models
 {
+    [Index(nameof(FirstName),nameof(LastName))]
     public class User
     {
         public int Id { get; set; }

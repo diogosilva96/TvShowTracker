@@ -84,6 +84,8 @@ namespace TvShowTracker.DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FirstName", "LastName");
+
                     b.ToTable("Actors");
                 });
 
@@ -263,6 +265,8 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("FirstName", "LastName");
 
                     b.ToTable("Users");
                 });

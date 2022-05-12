@@ -12,7 +12,7 @@ using TvShowTracker.DataAccessLayer;
 namespace TvShowTracker.DataAccessLayer.Migrations
 {
     [DbContext(typeof(TvShowTrackerDbContext))]
-    [Migration("20220511220315_InitialCreate")]
+    [Migration("20220512173825_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,8 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FirstName", "LastName");
 
                     b.ToTable("Actors");
                 });
@@ -265,6 +267,8 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("FirstName", "LastName");
 
                     b.ToTable("Users");
                 });

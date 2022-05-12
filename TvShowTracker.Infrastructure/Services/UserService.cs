@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using System.Linq.Expressions;
+using System.Reflection.Metadata.Ecma335;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,10 @@ namespace TvShowTracker.Infrastructure.Services
         {
             try
             {
+                if (user.GrantGdprConsent != true)
+                {
+                    return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "GDPR consent is required." });
+                }
                 var validationResult = await _registerValidator.ValidateAsync(user);
                 if (!validationResult.IsValid)
                 {
@@ -152,7 +157,7 @@ namespace TvShowTracker.Infrastructure.Services
             var userRole = await GetRoleNameById(userId);
             return userRole is not null && userRole.Equals(role, StringComparison.InvariantCultureIgnoreCase);
         }
-        public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(int requesterId, bool isActive, int? page = null, int? size = null)
+        public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(int requesterId, GetUsersFilter filter)
         {
             try
             {
@@ -162,22 +167,34 @@ namespace TvShowTracker.Infrastructure.Services
                     return ResultHelper.ToErrorResult<IEnumerable<UserModel>>( new List<string>{ "Not enough permissions" });
                 }
                 List<User>? users = null;
-                if (size is null && page is not null)
+                if (filter.PageSize is null && filter.Page is not null || filter.PageSize is not null && filter.Page is null)
                 {
-                    return ResultHelper.ToErrorResult<IEnumerable<UserModel>>(new List<string>() { "Size should not be null when page is not null." });
+                    return ResultHelper.ToErrorResult<IEnumerable<UserModel>>(new List<string>() { $"{nameof(filter.PageSize)} and {nameof(filter.Page)} should both be null or either have values." });
                 }
 
-                if (page is null && size is null)
+                Expression<Func<User, bool>> filterExpression = user =>
+                    (string.IsNullOrEmpty(filter.LastName) || user.LastName.ToLower() == filter.LastName.ToLower()) &&
+                    (string.IsNullOrEmpty(filter.FirstName) || user.FirstName.ToLower() == filter.FirstName) &&
+                    (string.IsNullOrEmpty(filter.Email) || user.Email.ToLower() == filter.Email.ToLower()) &&
+                    (!filter.IsActive.HasValue || user.IsActive == filter.IsActive);
+
+                if (filter.PageSize is null && filter.Page is null)
                 {
-                    users = await _context.Users.OrderBy(u => u.Id).ToListAsync();
+                    users = await _context.Users.Where(filterExpression).OrderBy(u => u.Id).ToListAsync();
                 }
 
-                if (size is not null && page is not null)
+                if (filter.PageSize is not null && filter.Page is not null)
                 {
-                    users = await _context.Users.Where(u => u.IsActive == isActive).OrderBy(u=> u.Id).Skip(page.Value*size.Value).Take(size.Value).ToListAsync();
+                    users = await _context.Users.Where(filterExpression).OrderBy(u=> u.Id).Skip(filter.Page.Value*filter.PageSize.Value).Take(filter.PageSize.Value).ToListAsync();
                 }
                 
-                var userModels = users is not null ? users.Select(u => _mapper.Map<UserModel>(u)) : Enumerable.Empty<UserModel>();
+                var userModels = users is not null ? 
+                    users.Select(u =>
+                    {
+                        var model = _mapper.Map<UserModel>(u);
+                        model.FavoriteShows = null;
+                        return model;
+                    }) : Enumerable.Empty<UserModel>();
                 return ResultHelper.ToSuccessResult(userModels);
             }
             catch (Exception ex)

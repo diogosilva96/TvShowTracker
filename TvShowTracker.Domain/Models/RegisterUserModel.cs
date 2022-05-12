@@ -21,5 +21,8 @@ namespace TvShowTracker.Domain.Models
         [Required(ErrorMessage = $"{nameof(Email)} is required")]
         public string? Email { get; set; }
 
+        [Required(ErrorMessage = $"{nameof(GrantGdprConsent)} is required")]
+        public bool? GrantGdprConsent { get; set; }
+
     }
 }

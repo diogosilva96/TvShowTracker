@@ -84,9 +84,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSingleton(builder.Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>());
 builder.Services.AddRouting(opts => { opts.LowercaseUrls = true; });
 builder.Services.AddHashingService(builder.Configuration["SaltKey"]);
-//TODO: create injector for IValidators
-builder.Services.AddScoped<IValidator<UserModel>, UserModelValidator>();
-builder.Services.AddScoped<IValidator<RegisterUserModel>, RegisterUserModelValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserModelValidator>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 

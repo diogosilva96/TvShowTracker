@@ -195,6 +195,11 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Actors_FirstName_LastName",
+                table: "Actors",
+                columns: new[] { "FirstName", "LastName" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ActorTvShow_ShowsId",
                 table: "ActorTvShow",
                 column: "ShowsId");
@@ -213,6 +218,11 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                 name: "IX_TvShowUser_FavoriteUsersId",
                 table: "TvShowUser",
                 column: "FavoriteUsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_FirstName_LastName",
+                table: "Users",
+                columns: new[] { "FirstName", "LastName" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",

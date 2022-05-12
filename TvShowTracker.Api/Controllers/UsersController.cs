@@ -24,10 +24,21 @@ namespace TvShowTracker.Api.Controllers
         }
 
         [HttpGet("api/v1/[controller]"), Authorize(Roles = UserRoles.Administrator)]
-        public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(int page = 0, int size = 50, bool? isActive = null)
+        public async Task<IActionResult> GetAllAsync([FromQuery]GetUsersFilter filter)
         {
             var userInfo = GetAuthenticatedUserInfo();
-            return await _userService.GetAllAsync(userInfo.Id, isActive ?? true, page, size);
+            return Ok(await _userService.GetAllAsync(userInfo.Id, filter));
+        }
+        [HttpGet("api/v1/[controller]/csv"),Authorize(Roles = UserRoles.Administrator)]
+        public async Task<IActionResult> GetAllToCsvAsync([FromQuery] GetUsersFilter filter)
+        {
+            var userInfo = GetAuthenticatedUserInfo();
+            var result = await _userService.GetAllAsync(userInfo.Id, filter);
+            if (!result.Success)
+            {
+                return Ok(result);
+            }
+            return File(CsvConverter.GetCsvBytes(result.Data), "text/csv", $"users_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv");
         }
 
         [HttpGet("api/v1/[controller]/{id}"), Authorize(Roles = UserRoles.User)]
