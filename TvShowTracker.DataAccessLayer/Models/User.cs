@@ -36,5 +36,10 @@ namespace TvShowTracker.DataAccessLayer.Models
         public int? RoleId { get; set; }
 
         public bool? IsActive { get; set; }
+
+        public User()
+        {
+            FavoriteShows = new List<TvShow>();
+        }
     }
 }

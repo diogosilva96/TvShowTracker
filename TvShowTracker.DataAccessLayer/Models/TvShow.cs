@@ -47,5 +47,13 @@ namespace TvShowTracker.DataAccessLayer.Models
         public ICollection<User> FavoriteUsers { get; set; }
 
         public bool? IsActive { get; set; }
+
+        public TvShow()
+        {
+            FavoriteUsers = new List<User>();
+            Genres = new List<Genre>();
+            Cast = new List<Actor>();
+            Episodes = new List<Episode>();
+        }
     }
 }

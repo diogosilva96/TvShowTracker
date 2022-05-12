@@ -11,7 +11,7 @@ namespace TvShowTracker.Background.Worker.Extensions
     {
         public static void AddEpisodeDateApiService(this IServiceCollection self, Action<HttpClient> clientConfiguration)
         {
-            self.AddSingleton<IEpisodeDateApiService>(provider =>
+            self.AddScoped<IEpisodeDateApiService>(provider =>
             {
                 var httpClient = new HttpClient();
                 clientConfiguration(httpClient);

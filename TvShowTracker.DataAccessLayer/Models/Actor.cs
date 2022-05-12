@@ -24,5 +24,10 @@ namespace TvShowTracker.DataAccessLayer.Models
         public ICollection<TvShow> Shows { get; set; }
 
         public bool? IsActive { get; set; }
+
+        public Actor()
+        {
+            Shows = new List<TvShow>();
+        }
     }
 }

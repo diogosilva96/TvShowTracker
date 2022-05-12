@@ -60,10 +60,15 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Synopsis = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     AddedAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "getutcdate()"),
-                    ReleasedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Network = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: true, defaultValueSql: "1")
                 },
                 constraints: table =>
@@ -126,12 +131,11 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Season = table.Column<int>(type: "int", nullable: false),
                     Number = table.Column<int>(type: "int", nullable: false),
-                    Synopsis = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     AddedAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "getutcdate()"),
-                    ReleasedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AirDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ShowId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: true, defaultValueSql: "1")
                 },
@@ -213,6 +217,21 @@ namespace TvShowTracker.DataAccessLayer.Migrations
                 name: "IX_GenreTvShow_ShowsId",
                 table: "GenreTvShow",
                 column: "ShowsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shows_Country",
+                table: "Shows",
+                column: "Country");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shows_Network",
+                table: "Shows",
+                column: "Network");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shows_Status",
+                table: "Shows",
+                column: "Status");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TvShowUser_FavoriteUsersId",
