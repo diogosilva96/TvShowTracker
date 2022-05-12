@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
 using TvShowTracker.Infrastructure.Helpers;
+using TvShowTracker.Infrastructure.Utilities;
 
 namespace TvShowTracker.Api.Controllers
 {

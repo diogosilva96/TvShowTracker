@@ -3,7 +3,7 @@ using TvShowTracker.DataAccessLayer.Models;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
 
-namespace TvShowTracker.Infrastructure.MappingProfile;
+namespace TvShowTracker.Infrastructure.Utilities;
 
 public class MappingProfile : Profile
 {

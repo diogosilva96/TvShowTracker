@@ -8,6 +8,7 @@ using TvShowTracker.DataAccessLayer.Models;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
 using TvShowTracker.Infrastructure.Helpers;
+using TvShowTracker.Infrastructure.Utilities;
 
 
 namespace TvShowTracker.Infrastructure.Services

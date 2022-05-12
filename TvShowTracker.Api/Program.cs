@@ -16,8 +16,8 @@ using TvShowTracker.DataAccessLayer;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
 using TvShowTracker.Infrastructure.Extensions;
-using TvShowTracker.Infrastructure.MappingProfile;
 using TvShowTracker.Infrastructure.Services;
+using TvShowTracker.Infrastructure.Utilities;
 using TvShowTracker.Infrastructure.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
