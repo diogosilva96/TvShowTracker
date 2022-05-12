@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TvShowTracker.Api\TvShowTracker.Api.csproj" />
+    <ProjectReference Include="..\..\TvShowTracker.Api\TvShowTracker.Api.csproj" />
   </ItemGroup>
 
 </Project>

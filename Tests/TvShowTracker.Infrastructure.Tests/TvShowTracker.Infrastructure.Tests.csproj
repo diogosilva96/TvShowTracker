@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TvShowTracker.Infrastructure\TvShowTracker.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\TvShowTracker.Infrastructure\TvShowTracker.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
