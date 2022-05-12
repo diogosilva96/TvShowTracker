@@ -35,10 +35,6 @@ namespace TvShowTracker.Infrastructure.Services
         {
             try
             {
-                if (user.GrantGdprConsent != true)
-                {
-                    return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "GDPR consent is required." });
-                }
                 var validationResult = await _registerValidator.ValidateAsync(user);
                 if (!validationResult.IsValid)
                 {

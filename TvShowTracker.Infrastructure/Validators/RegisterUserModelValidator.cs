@@ -17,6 +17,7 @@ namespace TvShowTracker.Infrastructure.Validators
             RuleFor(u => u.LastName).MinimumLength(2).MaximumLength(100);
             RuleFor(u => u.Password).MinimumLength(8);
             RuleFor(u => u.Email).NotEmpty().Must(r => MailAddress.TryCreate(r, out _));
+            RuleFor(u => u.GrantGdprConsent).Equal(true).WithMessage("Please provide GDPR consent.");
         }
     }
 }
