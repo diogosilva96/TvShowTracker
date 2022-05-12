@@ -23,24 +23,20 @@ namespace TvShowTracker.Api.Controllers
             _logger = logger;
         }
 
-        [Authorize(Roles = UserRoles.Administrator)]
-        [HttpGet("api/v1/[controller]")]
-        public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(int page = 0, int size = 50)
+        [HttpGet("api/v1/[controller]"), Authorize(Roles = UserRoles.Administrator)]
+        public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(int page = 0, int size = 50, bool? isActive = null)
         {
             var userInfo = GetAuthenticatedUserInfo();
-            return await _userService.GetAllAsync(userInfo.Id,page, size);
+            return await _userService.GetAllAsync(userInfo.Id, isActive ?? true, page, size);
         }
 
-        [Authorize(Roles = UserRoles.User)]
-        [Authorize]
-        [HttpGet("api/v1/[controller]/{id}")]
+        [HttpGet("api/v1/[controller]/{id}"), Authorize(Roles = UserRoles.User)]
         public async Task<IActionResult> GetByIdAsync(string id)
         {
-            
             var decodedId = _hashingService.Decode(id);
             if (decodedId is null)
             {
-                return NotFound(decodedId);
+                return NotFound(id);
             }
 
             var userInfo = GetAuthenticatedUserInfo();
@@ -48,16 +44,43 @@ namespace TvShowTracker.Api.Controllers
             return result.Success ? Ok(result) : NotFound(result.Errors);
         }
 
-        [AllowAnonymous]
-        [HttpPost("api/v1/[controller]/register")]
+        [HttpGet("api/v1/[controller]/{id}/favoriteShows"), Authorize(Roles = UserRoles.User)]
+        public async Task<IActionResult> GetFavoriteShowsAsync(string id)
+        {
+            var decodedId = _hashingService.Decode(id);
+            if (decodedId is null)
+            {
+                return NotFound(id);
+            }
+
+            var userInfo = GetAuthenticatedUserInfo();
+            var result = await _userService.GetFavoriteShowsAsync(decodedId.Value, userInfo.Id);
+            return result.Success ? Ok(result) : NotFound(result.Errors);
+        }
+
+        [HttpDelete("api/v1/[controller]/{id}/delete"), Authorize(Roles = UserRoles.User)]
+        public async Task<IActionResult> DeleteAsync(string id)
+        {
+            var decodedId = _hashingService.Decode(id);
+            if (decodedId is null)
+            {
+                return NotFound(id);
+            }
+
+            var userInfo = GetAuthenticatedUserInfo();
+            var result = await _userService.DeactivateAsync(decodedId.Value, userInfo.Id);
+            return result.Success ? Ok(result) : NotFound(result.Errors);
+        }
+      
+        [HttpPost("api/v1/[controller]/register"), AllowAnonymous]
         public async Task<IActionResult> RegisterAsync(RegisterUserModel registerUser)
         {
             var createResult = await _userService.RegisterAsync(registerUser);
             return !createResult.Success ? Problem(string.Join(",",createResult.Errors)) : Ok(createResult);
         }
 
-        [AllowAnonymous]
-        [HttpPost("api/v1/[controller]/authenticate")]
+        
+        [HttpPost("api/v1/[controller]/authenticate"), AllowAnonymous]
         public async Task<IActionResult> AuthenticateAsync(LoginModel loginModel)
         {
             var authResult = await _authenticationService.AuthenticateAsync(loginModel);

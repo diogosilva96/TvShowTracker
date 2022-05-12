@@ -107,9 +107,9 @@ namespace TvShowTracker.Infrastructure.Services
 
         public async Task<Result<UserModel>> GetByIdAsync(int id, int requesterId)
         {
-            if (id != requesterId && !await IsInRole(requesterId, UserRoles.Administrator))
+            if (!await IsSelfOrBelongsToRole(id, requesterId, UserRoles.Administrator))
             {
-                return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "Not enough permissions to access this record." });
+                return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "Unauthorized." });
             }
             var user = await GetByIdInternalAsync(id);
             return ResultHelper.ToSuccessResult(_mapper.Map<UserModel>(user));
@@ -121,10 +121,15 @@ namespace TvShowTracker.Infrastructure.Services
         private async Task<string?> GetRoleNameById(int userId) => (await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id == userId))?.Role?.Name;
 
 
-        public async Task<Result<bool>> DeactivateAsync(int id)
+        private async Task<bool> IsSelfOrBelongsToRole(int userId, int requesterId, string role) => userId == requesterId || await IsInRole(requesterId, role);
+        public async Task<Result<bool>> DeactivateAsync(int id, int requesterId)
         {
             try
             {
+                if (!await IsSelfOrBelongsToRole(id,requesterId,UserRoles.Administrator))
+                {
+                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "Unauthorized." });
+                }
                 var user = await GetByIdInternalAsync(id);
                 if (user is null)
                 {
@@ -147,7 +152,7 @@ namespace TvShowTracker.Infrastructure.Services
             var userRole = await GetRoleNameById(userId);
             return userRole is not null && userRole.Equals(role, StringComparison.InvariantCultureIgnoreCase);
         }
-        public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(int requesterId, int? page = null, int? size = null)
+        public async Task<Result<IEnumerable<UserModel>>> GetAllAsync(int requesterId, bool isActive, int? page = null, int? size = null)
         {
             try
             {
@@ -169,7 +174,7 @@ namespace TvShowTracker.Infrastructure.Services
 
                 if (size is not null && page is not null)
                 {
-                    users = await _context.Users.OrderBy(u=> u.Id).Skip(page.Value*size.Value).Take(size.Value).ToListAsync();
+                    users = await _context.Users.Where(u => u.IsActive == isActive).OrderBy(u=> u.Id).Skip(page.Value*size.Value).Take(size.Value).ToListAsync();
                 }
                 
                 var userModels = users is not null ? users.Select(u => _mapper.Map<UserModel>(u)) : Enumerable.Empty<UserModel>();
@@ -182,14 +187,18 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        public async Task<Result<IEnumerable<TvShowModel>>> GetFavoriteShowsAsync(int id)
+        public async Task<Result<IEnumerable<TvShowModel>>> GetFavoriteShowsAsync(int id, int requesterId)
         {
             try
             {
+                if (!await IsSelfOrBelongsToRole(id, requesterId, UserRoles.Administrator))
+                {
+                    return ResultHelper.ToErrorResult<IEnumerable<TvShowModel>>(new List<string>() {"Unauthorized"});
+                }
                 var user = await GetByIdInternalAsync(id);
                 if (user is null)
                 {
-                    ResultHelper.ToSuccessResult(Enumerable.Empty<Domain.Models.TvShowModel>());
+                    return ResultHelper.ToSuccessResult(Enumerable.Empty<TvShowModel>());
                 }
 
                 var shows = user.FavoriteShows.Select(s => _mapper.Map<TvShowModel>(s));
