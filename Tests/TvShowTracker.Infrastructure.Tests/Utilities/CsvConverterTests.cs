@@ -15,14 +15,14 @@ namespace TvShowTracker.Infrastructure.Tests.Utilities
         {
             var data = new List<MockModel>()
             {
-                new MockModel()
+                new ()
                 {
                     PropertyString = "MyStr",
                     PropertyNumber = 1,
                     PropertyDate = new DateTime(2022,5,12),
                     PropertyBool = false
                 },
-                new MockModel()
+                new ()
                 {
                     PropertyBool = true,
                     PropertyNumber = 40,

@@ -286,7 +286,8 @@ namespace TvShowTracker.Infrastructure.Services
                     // only the self user can remove favorites.
                     return ResultHelper.ToErrorResult<bool>(new List<string>() { "Unauthorized." });
                 }
-                var user = await GetByIdInternalAsync(userId);
+
+                var user = await _context.Users.Include(u => u.FavoriteShows).SingleOrDefaultAsync(u => u.Id == userId);
 
                 if (user is null)
                 {

@@ -69,6 +69,10 @@ namespace TvShowTracker.Api.Controllers
         [HttpPost("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.UserOrAdministrator)]
         public async Task<IActionResult> AddFavoriteShowsAsync(string id, [FromBody] FavoriteShowRequest request)
         {
+            if (!request.ShowIds.Any())
+            {
+                return Problem("Empty shows array.");
+            }
             var decodedId = _hashingService.Decode(id);
             var decodedShowIds = request.ShowIds.Select(sId => _hashingService.Decode(sId))
                                                                                       .Where(s=>s.HasValue)
@@ -86,12 +90,16 @@ namespace TvShowTracker.Api.Controllers
         [HttpDelete("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.UserOrAdministrator)]
         public async Task<IActionResult> RemoveFavoriteShowsAsync(string id, [FromBody]FavoriteShowRequest request)
         {
+            if (!request.ShowIds.Any())
+            {
+                return Problem("Empty shows array.");
+            }
             var decodedId = _hashingService.Decode(id);
             var decodedShowIds = request.ShowIds.Select(sId => _hashingService.Decode(sId))
                                         .Where(s => s.HasValue)
                                         .Cast<int>()
                                         .ToList();
-            if (decodedId is null || decodedShowIds.Any())
+            if (decodedId is null || !decodedShowIds.Any())
             {
                 return decodedId is null ? NotFound(id) : NotFound(request.ShowIds);
             }
