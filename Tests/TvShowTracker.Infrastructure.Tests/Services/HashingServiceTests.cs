@@ -3,16 +3,14 @@ using NSubstitute;
 using NUnit.Framework;
 using System;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using TvShowTracker.Domain.Services;
 using TvShowTracker.Infrastructure.Services;
 
-namespace TvShowTracker.Api.Tests.Services
+namespace TvShowTracker.Infrastructure.Tests.Services
 {
     [TestFixture]
     public class HashingServiceTests
     {
-
         public HashingService CreateUnderTest(string saltKey)
         {
             var logger = Substitute.For<ILogger<HashingService>>();
@@ -30,8 +28,8 @@ namespace TvShowTracker.Api.Tests.Services
 
         }
 
-        [TestCase("PkX",420)]
-        [TestCase("PW",20)]
+        [TestCase("PkX", 420)]
+        [TestCase("PW", 20)]
         public void Decode_Returns_Number_For_Valid_Decode_Strings(string decodeString, int expectedNumber)
         {
             var underTest = CreateUnderTest("SaltKey");
@@ -42,10 +40,10 @@ namespace TvShowTracker.Api.Tests.Services
 
         }
 
-        [TestCase(1,"3L")]
-        [TestCase(20,"PW")]
-        [TestCase(420,"PkX")]
-        public void Encode_Returns_String_For_Number(int number,string expectedResult)
+        [TestCase(1, "3L")]
+        [TestCase(20, "PW")]
+        [TestCase(420, "PkX")]
+        public void Encode_Returns_String_For_Number(int number, string expectedResult)
         {
             var underTest = CreateUnderTest("SaltKey");
 

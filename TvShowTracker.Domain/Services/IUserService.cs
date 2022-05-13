@@ -10,11 +10,11 @@ namespace TvShowTracker.Domain.Services
     public interface IUserService
     {
         public Task<Result<UserModel>> RegisterAsync(RegisterUserModel registerUser);
-        public Task<Result<IEnumerable<TvShowDetailsModel>>> GetFavoriteShowsAsync(int userId, int requesterId);
+        public Task<Result<IEnumerable<TvShowModel>>> GetFavoriteShowsAsync(int userId, int requesterId);
 
-        public Task<Result<bool>> AddFavoriteShowsAsync(int userId, IEnumerable<int> showIds);
+        public Task<Result<bool>> AddFavoriteShowsAsync(int userId, IEnumerable<int> showIds, int requesterId);
 
-        public Task<Result<bool>> RemoveFavoriteShowsAsync(int userId, IEnumerable<int> showIds);
+        public Task<Result<bool>> RemoveFavoriteShowsAsync(int userId, IEnumerable<int> showIds, int requesterId);
         public Task<Result<UserModel>> UpdateAsync(UserModel target);
 
         public Task<Result<UserModel>> GetByIdAsync(int id, int requesterId);

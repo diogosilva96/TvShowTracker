@@ -12,7 +12,6 @@ namespace TvShowTracker.Api.Controllers
     [ApiController]
     public class BaseController : Controller
     {
-        protected static User User = new User();
         protected readonly IHttpContextAccessor HttpContextAccessor;
         protected readonly ILogger<BaseController> Logger;
         public BaseController(IHttpContextAccessor httpContextAccessor, ILogger<BaseController> logger)

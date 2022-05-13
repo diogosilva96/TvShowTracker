@@ -20,5 +20,11 @@ namespace TvShowTracker.Infrastructure.Tests.Utilities
         {
             UserRoles.Administrator.Should().Be("Administrator");
         }
+
+        [Test]
+        public void Role_UserOrAdministrator_String_Should_Contain_UserAdministrator_Comma_Separated()
+        {
+            UserRoles.UserOrAdministrator.Should().Be("User,Administrator");
+        }
     }
 }

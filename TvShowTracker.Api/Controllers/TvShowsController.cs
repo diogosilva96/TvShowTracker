@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
+using TvShowTracker.Infrastructure.Utilities;
 
 namespace TvShowTracker.Api.Controllers
 {
@@ -20,7 +22,7 @@ namespace TvShowTracker.Api.Controllers
         public async Task<IActionResult> GetAllAsync([FromQuery] GetTvShowsFilter filter)
         {
             var result = await _showService.GetAllAsync(filter);
-            return Ok(result);
+            return result.Success ? Ok(result) : Problem(string.Join(",", result.Errors));
         }
 
         [HttpGet("api/v1/tv-shows/{id}")]
@@ -32,7 +34,7 @@ namespace TvShowTracker.Api.Controllers
                 return NotFound(id);
             }
             var result = await _showService.GetByIdAsync(numberId.Value);
-            return Ok(result);
+            return result.Success? Ok(result) : Problem(string.Join(",", result.Errors));
         }
     }
 }

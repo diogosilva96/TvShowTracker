@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
-using TvShowTracker.Infrastructure.Helpers;
 using TvShowTracker.Infrastructure.Utilities;
 
 namespace TvShowTracker.Api.Controllers
@@ -25,21 +23,22 @@ namespace TvShowTracker.Api.Controllers
         public async Task<IActionResult> GetAllAsync([FromQuery]GetUsersFilter filter)
         {
             var userInfo = GetAuthenticatedUserInfo();
-            return Ok(await _userService.GetAllAsync(userInfo.Id, filter));
+            var result = await _userService.GetAllAsync(userInfo.Id, filter);
+            return result.Success ? Ok(result) : Problem(string.Join(",", result.Errors));
         }
-        [HttpGet("api/v1/[controller]/export-csv"),Authorize(Roles = UserRoles.Administrator)]
+        [HttpGet("api/v1/files/csv/[controller]"),Authorize(Roles = UserRoles.Administrator)]
         public async Task<IActionResult> GetAllToCsvAsync([FromQuery] GetUsersFilter filter)
         {
             var userInfo = GetAuthenticatedUserInfo();
             var result = await _userService.GetAllAsync(userInfo.Id, filter);
             if (!result.Success)
             {
-                return Ok(result);
+                return Problem(string.Join(",", result.Errors));
             }
             return File(CsvConverter.GetCsvBytes(result.Data), "text/csv", $"users_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv");
         }
 
-        [HttpGet("api/v1/[controller]/{id}"), Authorize(Roles = UserRoles.User)]
+        [HttpGet("api/v1/[controller]/{id}"), Authorize(Roles = UserRoles.UserOrAdministrator)]
         public async Task<IActionResult> GetByIdAsync(string id)
         {
             var decodedId = _hashingService.Decode(id);
@@ -53,7 +52,7 @@ namespace TvShowTracker.Api.Controllers
             return result.Success ? Ok(result) : NotFound(result.Errors);
         }
 
-        [HttpGet("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.User)]
+        [HttpGet("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.UserOrAdministrator)]
         public async Task<IActionResult> GetFavoriteShowsAsync(string id)
         {
             var decodedId = _hashingService.Decode(id);
@@ -64,10 +63,44 @@ namespace TvShowTracker.Api.Controllers
 
             var userInfo = GetAuthenticatedUserInfo();
             var result = await _userService.GetFavoriteShowsAsync(decodedId.Value, userInfo.Id);
-            return result.Success ? Ok(result) : NotFound(result.Errors);
+            return result.Success ? Ok(result) : Problem(string.Join(",", result.Errors));
         }
 
-        [HttpDelete("api/v1/[controller]/{id}/delete"), Authorize(Roles = UserRoles.User)]
+        [HttpPost("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.UserOrAdministrator)]
+        public async Task<IActionResult> AddFavoriteShowsAsync(string id, [FromBody] FavoriteShowRequest request)
+        {
+            var decodedId = _hashingService.Decode(id);
+            var decodedShowIds = request.ShowIds.Select(sId => _hashingService.Decode(sId))
+                                                                                      .Where(s=>s.HasValue)
+                                                                                      .Cast<int>()
+                                                                                      .ToList();
+            if (decodedId is null || decodedShowIds.Any())
+            {
+                return decodedId is null ? NotFound(id) : NotFound(request.ShowIds);
+            }
+            var userInfo = GetAuthenticatedUserInfo();
+            var result = await _userService.AddFavoriteShowsAsync(decodedId.Value, decodedShowIds, userInfo.Id);
+            return result.Success ? Ok() : Problem(string.Join(",", result.Errors));
+        }
+
+        [HttpDelete("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.UserOrAdministrator)]
+        public async Task<IActionResult> RemoveFavoriteShowsAsync(string id, [FromBody]FavoriteShowRequest request)
+        {
+            var decodedId = _hashingService.Decode(id);
+            var decodedShowIds = request.ShowIds.Select(sId => _hashingService.Decode(sId))
+                                        .Where(s => s.HasValue)
+                                        .Cast<int>()
+                                        .ToList();
+            if (decodedId is null || decodedShowIds.Any())
+            {
+                return decodedId is null ? NotFound(id) : NotFound(request.ShowIds);
+            }
+            var userInfo = GetAuthenticatedUserInfo();
+            var result = await _userService.RemoveFavoriteShowsAsync(decodedId.Value, decodedShowIds, userInfo.Id);
+            return result.Success ? Ok() : Problem(string.Join(",", result.Errors));
+        }
+
+        [HttpDelete("api/v1/[controller]/{id}"), Authorize(Roles = UserRoles.UserOrAdministrator)]
         public async Task<IActionResult> DeleteAsync(string id)
         {
             var decodedId = _hashingService.Decode(id);
@@ -78,10 +111,10 @@ namespace TvShowTracker.Api.Controllers
 
             var userInfo = GetAuthenticatedUserInfo();
             var result = await _userService.DeactivateAsync(decodedId.Value, userInfo.Id);
-            return result.Success ? Ok(result) : NotFound(result.Errors);
+            return result.Success ? Ok() : Problem(string.Join(",", result.Errors));
         }
       
-        [HttpPost("api/v1/[controller]/register"), AllowAnonymous]
+        [HttpPost("api/v1/[controller]"), AllowAnonymous]
         public async Task<IActionResult> RegisterAsync(RegisterUserModel registerUser)
         {
             var createResult = await _userService.RegisterAsync(registerUser);

@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.InteropServices;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace TvShowTracker.DataAccessLayer.Models
 {
-
     [Index(nameof(Country))]
     [Index(nameof(Network))]
     [Index(nameof(Status))]

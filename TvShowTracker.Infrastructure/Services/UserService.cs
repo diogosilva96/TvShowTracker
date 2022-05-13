@@ -120,7 +120,7 @@ namespace TvShowTracker.Infrastructure.Services
 
         }
 
-        private async Task<User?> GetByIdInternalAsync(int id) => await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        private async Task<User?> GetByIdInternalAsync(int id) => await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
 
         private async Task<string?> GetRoleNameById(int userId) => (await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id == userId))?.Role?.Name;
 
@@ -210,43 +210,51 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        public async Task<Result<IEnumerable<TvShowDetailsModel>>> GetFavoriteShowsAsync(int id, int requesterId)
+        public async Task<Result<IEnumerable<TvShowModel>>> GetFavoriteShowsAsync(int id, int requesterId)
         {
             try
             {
                 if (!await IsSelfOrBelongsToRole(id, requesterId, UserRoles.Administrator))
                 {
-                    return ResultHelper.ToErrorResult<IEnumerable<TvShowDetailsModel>>(new List<string>() {"Unauthorized"});
+                    return ResultHelper.ToErrorResult<IEnumerable<TvShowModel>>(new List<string>() {"Unauthorized"});
                 }
-                var user = await GetByIdInternalAsync(id);
+                var user = await _context.Users
+                                         .Include(u=>u.FavoriteShows)
+                                         .SingleOrDefaultAsync(u=> u.Id == id);
                 if (user is null)
                 {
-                    return ResultHelper.ToSuccessResult(Enumerable.Empty<TvShowDetailsModel>());
+                    return ResultHelper.ToSuccessResult(Enumerable.Empty<TvShowModel>());
                 }
 
-                var shows = user.FavoriteShows.Select(s => _mapper.Map<TvShowDetailsModel>(s));
+                var shows = user.FavoriteShows.Select(s => _mapper.Map<TvShowModel>(s));
                 return ResultHelper.ToSuccessResult(shows);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(GetFavoriteShowsAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<IEnumerable<Domain.Models.TvShowDetailsModel>>(new List<string>() { ex.ToString() });
+                return ResultHelper.ToErrorResult<IEnumerable<TvShowModel>>(new List<string>() { ex.ToString() });
             }
         }
 
 
 
-        public async Task<Result<bool>> AddFavoriteShowsAsync(int userId, IEnumerable<int> showIds)
+        public async Task<Result<bool>> AddFavoriteShowsAsync(int userId, IEnumerable<int> showIds, int requesterId)
         {
             try
             {
-                var user = await GetByIdInternalAsync(userId);
+                if (requesterId != userId)
+                {
+                    // only the self user can add favorites.
+                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "Unauthorized." });
+                }
+
+                var user = await _context.Users.Include(u=>u.FavoriteShows).SingleOrDefaultAsync(u => u.Id == userId);
                 if (user is null)
                 {
                    return ResultHelper.ToSuccessResult(false);
                 }
 
-                if (user.FavoriteShows.All(s => showIds.Contains(s.Id)))
+                if (user.FavoriteShows.Any() && user.FavoriteShows.All(s => showIds.Contains(s.Id)))
                 {
                     return ResultHelper.ToSuccessResult(true);
                 }
@@ -269,10 +277,15 @@ namespace TvShowTracker.Infrastructure.Services
             }
         }
 
-        public async Task<Result<bool>> RemoveFavoriteShowsAsync(int userId, IEnumerable<int> showIds)
+        public async Task<Result<bool>> RemoveFavoriteShowsAsync(int userId, IEnumerable<int> showIds, int requesterId)
         {
             try
             {
+                if (requesterId != userId)
+                {
+                    // only the self user can remove favorites.
+                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "Unauthorized." });
+                }
                 var user = await GetByIdInternalAsync(userId);
 
                 if (user is null)
