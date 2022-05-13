@@ -6,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace TvShowTracker.Domain.Models
 {
-    public class GetUsersFilter
+    public class GetUsersFilter : PagedFilter
     {
-        public int? Page { get; set; }
-
-        public int? PageSize { get; set; }
-
         public bool? IsActive { get; set; }
 
         public string? FirstName { get; set; }

@@ -10,6 +10,7 @@ using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
 using TvShowTracker.Infrastructure.Helpers;
 using TvShowTracker.Infrastructure.Utilities;
+using TvShowTracker.Infrastructure.Validators;
 
 
 namespace TvShowTracker.Infrastructure.Services
@@ -19,14 +20,16 @@ namespace TvShowTracker.Infrastructure.Services
         private readonly TvShowTrackerDbContext _context;
         private readonly IValidator<UserModel> _userValidator;
         private readonly IValidator<RegisterUserModel> _registerValidator;
+        private readonly IValidator<PagedFilter> _pagedFilterValidator;
         private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
         
-        public UserService(TvShowTrackerDbContext context, IValidator<UserModel> userValidator, IValidator<RegisterUserModel> registerValidator, IMapper mapper, ILogger<UserService> logger)
+        public UserService(TvShowTrackerDbContext context, IValidator<UserModel> userValidator, IValidator<RegisterUserModel> registerValidator, IValidator<PagedFilter> pagedFilterValidator, IMapper mapper, ILogger<UserService> logger)
         {
             _context = context;
             _userValidator = userValidator;
             _registerValidator = registerValidator;
+            _pagedFilterValidator = pagedFilterValidator;
             _mapper = mapper;
             _logger = logger;
         }
@@ -62,7 +65,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ToString());
+                _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(RegisterAsync), ex.ToString());
                 return ResultHelper.ToErrorResult<UserModel>(new List<string>() { ex.ToString() });
             }
         }
@@ -83,7 +86,7 @@ namespace TvShowTracker.Infrastructure.Services
                     return ResultHelper.ToErrorResult<UserModel>(validationResult);
                 }
 
-                var dbUser = _mapper.Map<DataAccessLayer.Models.User>(user);
+                var dbUser = _mapper.Map<User>(user);
                 if (!_context.Users.Any(u => u.Id == dbUser.Id))
                 {
                     return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "User not found." });
@@ -101,7 +104,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ToString());
+                _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(UpdateAsync), ex.ToString());
                 return ResultHelper.ToErrorResult<UserModel>(new List<string>() { ex.ToString() });
             }
         }
@@ -143,7 +146,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ToString());
+                _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(DeactivateAsync), ex.ToString());
                 return ResultHelper.ToErrorResult<bool>(new List<string>() { ex.ToString() });
             }
         }
@@ -162,12 +165,13 @@ namespace TvShowTracker.Infrastructure.Services
                     // this should never happen as long as the api is configured correctly
                     return ResultHelper.ToErrorResult<IEnumerable<UserModel>>( new List<string>{ "Not enough permissions" });
                 }
-                List<User>? users = null;
-                if (filter.PageSize is null && filter.Page is not null || filter.PageSize is not null && filter.Page is null)
-                {
-                    return ResultHelper.ToErrorResult<IEnumerable<UserModel>>(new List<string>() { $"{nameof(filter.PageSize)} and {nameof(filter.Page)} should both be null or either have values." });
-                }
 
+                var filterValidation = await _pagedFilterValidator.ValidateAsync(filter);
+                if (!filterValidation.IsValid)
+                {
+                    return ResultHelper.ToErrorResult<IEnumerable<UserModel>> (filterValidation);
+                }
+                List<User>? users = null;
                 Expression<Func<User, bool>> filterExpression = user =>
                     (string.IsNullOrEmpty(filter.LastName) || user.LastName.ToLower() == filter.LastName.ToLower()) &&
                     (string.IsNullOrEmpty(filter.FirstName) || user.FirstName.ToLower() == filter.FirstName) &&
@@ -176,15 +180,21 @@ namespace TvShowTracker.Infrastructure.Services
 
                 if (filter.PageSize is null && filter.Page is null)
                 {
-                    users = await _context.Users.Where(filterExpression).OrderBy(u => u.Id).ToListAsync();
+                    users = await _context.Users.Where(filterExpression)
+                                                .OrderBy(u => u.Id)
+                                                .ToListAsync();
                 }
 
                 if (filter.PageSize is not null && filter.Page is not null)
                 {
-                    users = await _context.Users.Where(filterExpression).OrderBy(u=> u.Id).Skip(filter.Page.Value*filter.PageSize.Value).Take(filter.PageSize.Value).ToListAsync();
+                    users = await _context.Users.Where(filterExpression)
+                                                .OrderBy(u=> u.Id)
+                                                .Skip(filter.Page.Value*filter.PageSize.Value)
+                                                .Take(filter.PageSize.Value)
+                                                .ToListAsync();
                 }
                 
-                var userModels = users is not null ? 
+                var userModels = users is not null && users.Any() ? 
                     users.Select(u =>
                     {
                         var model = _mapper.Map<UserModel>(u);
@@ -195,32 +205,32 @@ namespace TvShowTracker.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ToString());
+                _logger.LogError("Error occurred on {methodName}. Error details {details}",nameof(GetAllAsync), ex.ToString());
                 return ResultHelper.ToErrorResult<IEnumerable<UserModel>>(new List<string>() { ex.ToString() });
             }
         }
 
-        public async Task<Result<IEnumerable<TvShowModel>>> GetFavoriteShowsAsync(int id, int requesterId)
+        public async Task<Result<IEnumerable<TvShowDetailsModel>>> GetFavoriteShowsAsync(int id, int requesterId)
         {
             try
             {
                 if (!await IsSelfOrBelongsToRole(id, requesterId, UserRoles.Administrator))
                 {
-                    return ResultHelper.ToErrorResult<IEnumerable<TvShowModel>>(new List<string>() {"Unauthorized"});
+                    return ResultHelper.ToErrorResult<IEnumerable<TvShowDetailsModel>>(new List<string>() {"Unauthorized"});
                 }
                 var user = await GetByIdInternalAsync(id);
                 if (user is null)
                 {
-                    return ResultHelper.ToSuccessResult(Enumerable.Empty<TvShowModel>());
+                    return ResultHelper.ToSuccessResult(Enumerable.Empty<TvShowDetailsModel>());
                 }
 
-                var shows = user.FavoriteShows.Select(s => _mapper.Map<TvShowModel>(s));
+                var shows = user.FavoriteShows.Select(s => _mapper.Map<TvShowDetailsModel>(s));
                 return ResultHelper.ToSuccessResult(shows);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ToString());
-                return ResultHelper.ToErrorResult<IEnumerable<Domain.Models.TvShowModel>>(new List<string>() { ex.ToString() });
+                _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(GetFavoriteShowsAsync), ex.ToString());
+                return ResultHelper.ToErrorResult<IEnumerable<Domain.Models.TvShowDetailsModel>>(new List<string>() { ex.ToString() });
             }
         }
 
@@ -254,7 +264,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ToString());
+                _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(AddFavoriteShowsAsync), ex.ToString());
                 return ResultHelper.ToErrorResult<bool>(new List<string>(){ ex.ToString() });
             }
         }
@@ -282,7 +292,7 @@ namespace TvShowTracker.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ToString());
+                _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(RemoveFavoriteShowsAsync), ex.ToString());
                 return ResultHelper.ToErrorResult<bool>(new List<string>() { ex.ToString() });
             }
         }

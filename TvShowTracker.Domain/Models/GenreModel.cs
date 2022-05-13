@@ -14,7 +14,7 @@ namespace TvShowTracker.Domain.Models
 
         public string? Description { get; set; }
 
-        public IEnumerable<TvShowModel> Shows { get; set; }
+        public IEnumerable<TvShowDetailsModel> Shows { get; set; }
 
         public bool IsActive { get; set; }
     }

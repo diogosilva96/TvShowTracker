@@ -8,7 +8,7 @@ using TvShowTracker.Domain.Models;
 
 namespace TvShowTracker.Infrastructure.Validators
 {
-    public class TvShowModelValidator : AbstractValidator<TvShowModel>
+    public class TvShowModelValidator : AbstractValidator<TvShowDetailsModel>
     {
         public TvShowModelValidator()
         {

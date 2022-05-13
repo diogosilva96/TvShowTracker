@@ -13,14 +13,12 @@ namespace TvShowTracker.Api.Controllers
         private readonly IUserService _userService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IHashingService _hashingService;
-        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IHttpContextAccessor httpContextAccessor, IUserService userService, IAuthenticationService authenticationService, IHashingService hashingService, ILogger<UsersController> logger) : base(httpContextAccessor)
+        public UsersController(IHttpContextAccessor httpContextAccessor, IUserService userService, IAuthenticationService authenticationService, IHashingService hashingService, ILogger<UsersController> logger) : base(httpContextAccessor, logger)
         {
             _userService = userService;
             _authenticationService = authenticationService;
             _hashingService = hashingService;
-            _logger = logger;
         }
 
         [HttpGet("api/v1/[controller]"), Authorize(Roles = UserRoles.Administrator)]

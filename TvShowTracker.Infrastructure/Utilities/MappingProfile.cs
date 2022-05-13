@@ -37,12 +37,19 @@ public class MappingProfile : Profile
                                                    opt => opt.MapFrom(source => source.Id == null
                                                                           ? null
                                                                           : hashingService.Decode(source.Id)));
-        CreateMap<TvShow, TvShowModel>().ForMember(destination => destination.Id,
+        CreateMap<TvShow, TvShowDetailsModel>().ForMember(destination => destination.Id,
                                                  opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
-        CreateMap<TvShowModel, TvShow>().ForMember(destination => destination.Id,
+        CreateMap<TvShowDetailsModel, TvShow>().ForMember(destination => destination.Id,
                                                  opt => opt.MapFrom(source => source.Id == null
                                                                         ? null
                                                                         : hashingService.Decode(source.Id)));
+
+        CreateMap<TvShow, TvShowModel>().ForMember(destination => destination.Id,
+                                                          opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
+        CreateMap<TvShowModel, TvShow>().ForMember(destination => destination.Id,
+                                                          opt => opt.MapFrom(source => source.Id == null
+                                                                                 ? null
+                                                                                 : hashingService.Decode(source.Id)));
 
         CreateMap<RegisterUserModel, User>().ForMember(destination => destination.Password, opt => opt.MapFrom(source => BCrypt.Net.BCrypt.HashPassword(source.Password)));
     }

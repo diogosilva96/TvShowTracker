@@ -24,7 +24,7 @@ namespace TvShowTracker.Domain.Models
 
         public DateTime? LastUpdatedAt { get; set; }
 
-        public IEnumerable<TvShowModel> FavoriteShows { get; set; }
+        public IEnumerable<TvShowDetailsModel> FavoriteShows { get; set; }
         public bool IsActive { get; set; }
     }
 }

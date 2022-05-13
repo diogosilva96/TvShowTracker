@@ -14,9 +14,11 @@ namespace TvShowTracker.Api.Controllers
     {
         protected static User User = new User();
         protected readonly IHttpContextAccessor HttpContextAccessor;
-        public BaseController(IHttpContextAccessor httpContextAccessor)
+        protected readonly ILogger<BaseController> Logger;
+        public BaseController(IHttpContextAccessor httpContextAccessor, ILogger<BaseController> logger)
         {
             HttpContextAccessor = httpContextAccessor;
+            Logger = logger;
         }
 
         protected AuthenticatedUserInfo? GetAuthenticatedUserInfo()

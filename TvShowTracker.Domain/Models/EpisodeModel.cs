@@ -20,7 +20,7 @@ namespace TvShowTracker.Domain.Models
 
         public DateTime? AirDate { get; set; }
 
-        public TvShowModel Show { get; set; }
+        public TvShowDetailsModel Show { get; set; }
         public bool? IsActive { get; set; }
     }
 }

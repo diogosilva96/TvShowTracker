@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace TvShowTracker.Domain.Models
 {
-    public class TvShowModel
+    public class GetTvShowsFilter : PagedFilter
     {
-        public string Id { get; set; }
-
         public string? Name { get; set; }
 
         public DateTime? StartDate { get; set; }

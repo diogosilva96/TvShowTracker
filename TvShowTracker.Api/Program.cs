@@ -87,6 +87,7 @@ builder.Services.AddHashingService(builder.Configuration["SaltKey"]);
 builder.Services.AddValidatorsFromAssemblyContaining<UserModelValidator>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<ITvShowService, TvShowService>();
 
 var app = builder.Build();
 

@@ -7,7 +7,8 @@ using TvShowTracker.Domain.Models;
 
 namespace TvShowTracker.Domain.Services
 {
-    public interface ITvShowService : IGenericService<TvShowModel>
+    public interface ITvShowService
     {
+        public Task<Result<IEnumerable<TvShowModel>>> GetAllAsync(GetTvShowsFilter filter);
     }
 }
