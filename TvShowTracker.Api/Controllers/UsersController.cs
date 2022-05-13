@@ -29,7 +29,7 @@ namespace TvShowTracker.Api.Controllers
             var userInfo = GetAuthenticatedUserInfo();
             return Ok(await _userService.GetAllAsync(userInfo.Id, filter));
         }
-        [HttpGet("api/v1/[controller]/csv"),Authorize(Roles = UserRoles.Administrator)]
+        [HttpGet("api/v1/[controller]/export-csv"),Authorize(Roles = UserRoles.Administrator)]
         public async Task<IActionResult> GetAllToCsvAsync([FromQuery] GetUsersFilter filter)
         {
             var userInfo = GetAuthenticatedUserInfo();
@@ -55,7 +55,7 @@ namespace TvShowTracker.Api.Controllers
             return result.Success ? Ok(result) : NotFound(result.Errors);
         }
 
-        [HttpGet("api/v1/[controller]/{id}/favoriteShows"), Authorize(Roles = UserRoles.User)]
+        [HttpGet("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.User)]
         public async Task<IActionResult> GetFavoriteShowsAsync(string id)
         {
             var decodedId = _hashingService.Decode(id);

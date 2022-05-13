@@ -29,8 +29,8 @@ public class TvShowDbInitializer : BackgroundService
             await using var scope = _serviceProvider.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<TvShowTrackerDbContext>();
             await dbContext.Database.MigrateAsync();
-            SeedRoles(dbContext);
-            await dbContext.SaveChangesAsync();
+            await SeedRoles(dbContext);
+            await SeedUsers(dbContext);
         }
         catch (Exception ex)
         {
@@ -38,7 +38,25 @@ public class TvShowDbInitializer : BackgroundService
         }
     }
 
-    private void SeedRoles(TvShowTrackerDbContext context)
+    private async Task SeedUsers(TvShowTrackerDbContext context)
+    {
+        if (context.Users.Any(u => u.Email == "admin@admin.com")) return;
+        var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Administrator");
+        if (adminRole is null) return;
+
+        var admin = new User 
+        { 
+            Email = "admin@admin.com", 
+            FirstName = "Admin",
+            LastName = "Admin", 
+            Role = adminRole,
+            Password = "$2a$11$yvCVm7WPgX/sTNrU/ZWDQ.qdLlUkzynvzyqXWAb0jywjUVW8QXNCq" //adminSecretPassword
+        };
+        context.Users.Add(admin);
+        await context.SaveChangesAsync();
+    }
+
+    private async Task SeedRoles(TvShowTrackerDbContext context)
     {
         if (context.Roles.Any()) return;
         var roleList = new List<string> { "User", "Administrator" };
@@ -47,6 +65,6 @@ public class TvShowDbInitializer : BackgroundService
                                              {
                                                  Name = role
                                              }));
+        await context.SaveChangesAsync();
     }
-
 }
