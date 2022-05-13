@@ -41,9 +41,7 @@ namespace TvShowTracker.Background.Worker.Models
         [JsonPropertyName("image_thumbnail_path")]
         public string ImageThumbnailPath { get; set; }
 
-        [JsonPropertyName("rating")] public string? Rating { get; set; }
-
-        [JsonPropertyName("rating_count")] public string? RatingCount { get; set; }
+        [JsonPropertyName("rating_count")] public string RatingCount { get; set; }
 
         [JsonPropertyName("countdown")] public object? Countdown { get; set; }
 

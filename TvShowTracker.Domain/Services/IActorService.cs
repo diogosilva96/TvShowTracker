@@ -7,6 +7,7 @@ using TvShowTracker.Domain.Models;
 
 namespace TvShowTracker.Domain.Services
 {
+    //TODO: to be implemented
     public interface IActorService
     {
         public Task<Result<IEnumerable<ActorModel>>> GetAllAsync(GetActorsFilter filter);

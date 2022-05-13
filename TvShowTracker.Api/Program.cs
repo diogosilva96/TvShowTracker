@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using TvShowTracker.Api;
+using TvShowTracker.Api.Extensions;
 using TvShowTracker.DataAccessLayer;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
@@ -88,6 +89,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<UserModelValidator>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITvShowService, TvShowService>();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

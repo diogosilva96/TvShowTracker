@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using TvShowTracker.DataAccessLayer;
 using TvShowTracker.DataAccessLayer.Models;
@@ -44,15 +45,79 @@ public class TvShowDbInitializer : BackgroundService
         var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "Administrator");
         if (adminRole is null) return;
 
-        var admin = new User 
-        { 
-            Email = "admin@admin.com", 
+        var admin = new User
+        {
+            Email = "admin@admin.com",
             FirstName = "Admin",
-            LastName = "Admin", 
+            LastName = "Admin",
             Role = adminRole,
-            Password = "$2a$11$yvCVm7WPgX/sTNrU/ZWDQ.qdLlUkzynvzyqXWAb0jywjUVW8QXNCq" //adminSecretPassword
+            Password = BCrypt.Net.BCrypt.HashPassword("superSecretPassword") //adminSecretPassword
         };
         context.Users.Add(admin);
+        var random = new Random();
+        await context.SaveChangesAsync();
+        var firstNames = new []
+        {
+            "Harry", "Ross",
+            "Bruce", "Cook",
+            "Carolyn", "Morgan",
+            "Albert", "Walker",
+            "Randy", "Reed",
+            "Larry", "Barnes",
+            "Lois", "Wilson",
+            "Jesse", "Campbell",
+            "Ernest", "Rogers",
+            "Theresa", "Patterson",
+            "Henry", "Simmons",
+            "Michelle", "Perry",
+            "Frank", "Butler",
+            "Shirley"
+        };
+        var lastNames = new []
+        {
+            "Ruth", "Jackson",
+            "Debra", "Allen",
+            "Gerald", "Harris",
+            "Raymond", "Carter",
+            "Jacqueline", "Torres",
+            "Joseph", "Nelson",
+            "Carlos", "Sanchez",
+            "Ralph", "Clark",
+            "Jean", "Alexander",
+            "Stephen", "Roberts",
+            "Eric", "Long",
+            "Amanda", "Scott",
+            "Teresa", "Diaz",
+            "Wanda", "Thomas"
+        };
+        var users = new List<User>();
+        var userRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == "User");
+        if (userRole is null) return;
+        //create random users
+        for (int i = 0; i < 100; i++)
+        {
+                var firstName = string.Empty;
+                var lastName = string.Empty;
+                do
+                {
+                    firstName = firstNames[random.Next(0, firstNames.Length)];
+                    lastName = lastNames[random.Next(0, lastNames.Length)];
+
+                } while (users.Any(u => u.FirstName == firstName && u.LastName == lastName));
+
+                var email = $"{firstName}.{lastName}@email.com";
+
+                var user = new User()
+                {
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Password = BCrypt.Net.BCrypt.HashPassword($"pw{firstName}{lastName}".ToLower()),
+                    Role = userRole
+                };
+                users.Add(user);
+        }
+        context.Users.AddRange(users);
         await context.SaveChangesAsync();
     }
 

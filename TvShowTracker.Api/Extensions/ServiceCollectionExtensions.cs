@@ -1,7 +1,7 @@
 ﻿using TvShowTracker.Domain.Services;
 using TvShowTracker.Infrastructure.Services;
 
-namespace TvShowTracker.Api
+namespace TvShowTracker.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {

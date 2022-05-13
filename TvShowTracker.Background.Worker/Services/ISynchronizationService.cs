@@ -12,6 +12,6 @@ namespace TvShowTracker.Background.Worker.Services
         /// Executes the synchronization
         /// </summary>
         /// <returns></returns>
-        public Task ExecuteAsync(int startPage, int pagesToSync);
+        public Task ExecuteAsync();
     }
 }

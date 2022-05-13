@@ -72,6 +72,7 @@ namespace TvShowTracker.Infrastructure.Services
 
         public async Task<Result<UserModel>> UpdateAsync(UserModel user)
         {
+            // this method has not been tested
             try
             {
                 if (user.Id is null)

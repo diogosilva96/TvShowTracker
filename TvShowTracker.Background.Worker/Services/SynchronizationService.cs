@@ -25,12 +25,14 @@ namespace TvShowTracker.Background.Worker.Services
             _mapper = mapper;
             _logger = logger;
         }
-        public async Task ExecuteAsync(int startPage, int pagesToSync)
+        public async Task ExecuteAsync()
         {
-            var currentPage = startPage;
+
+            var currentPage = 1;
+
             try
             {
-                while (currentPage != startPage + pagesToSync)
+                while (true)
                 {
                     _logger.LogInformation("Starting synchronization for page {page}...",currentPage);
                     // ideally some retry policies should exist here for the http requests - for e.g, Polly nuget
@@ -41,7 +43,8 @@ namespace TvShowTracker.Background.Worker.Services
                         currentPage++;
                         continue;
                     }
-                    if (tvShowResult is not null && tvShowResult.Page >= tvShowResult.Pages)
+
+                    if (tvShowResult.Page >= tvShowResult.Pages)
                     {
                         _logger.LogInformation("All the shows have been synchronized.");
                         break;
