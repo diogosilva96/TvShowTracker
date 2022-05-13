@@ -74,5 +74,30 @@ namespace TvShowTracker.Infrastructure.Services
                 return ResultHelper.ToErrorResult<IEnumerable<TvShowModel>>(new List<string>() { ex.ToString() });
             }
         }
+
+        public async Task<Result<TvShowDetailsModel>> GetByIdAsync(int id)
+        {
+            try
+            {
+                var show = await _context.Shows
+                                         .Include(s => s.Genres)
+                                         .Include(s => s.Cast)
+                                         .Include(s => s.Episodes)
+                                         .FirstOrDefaultAsync(s => s.Id == id);
+                if (show == null)
+                {
+                    return ResultHelper.ToErrorResult<TvShowDetailsModel>(new List<string>() { "Show not found."});
+                }
+
+                var showDetails = _mapper.Map<TvShowDetailsModel>(show);
+                return ResultHelper.ToSuccessResult(showDetails);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(GetAllAsync), ex.ToString());
+                return ResultHelper.ToErrorResult<TvShowDetailsModel>(new List<string>() { ex.ToString() });
+            }
+        }
     }
 }

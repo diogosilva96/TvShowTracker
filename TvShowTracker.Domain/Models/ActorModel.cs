@@ -10,15 +10,15 @@ namespace TvShowTracker.Domain.Models
     {
         public string? Id { get; set; }
 
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         public DateTime? BirthDate { get; set; }
 
         public string? Description { get; set; }
 
-        public IEnumerable<TvShowDetailsModel> Shows { get; set; }
+        public IEnumerable<TvShowModel>? Shows { get; set; }
 
         public bool IsActive { get; set; }
     }

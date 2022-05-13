@@ -25,24 +25,21 @@ public class MappingProfile : Profile
                                                                       : hashingService.Decode(source.Id)));
         CreateMap<Actor, ActorModel>().ForMember(destination => destination.Id,
                                                opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
-        CreateMap<Genre, GenreModel>().ForMember(destination => destination.Id,
-                                               opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
-        CreateMap<GenreModel, Genre>().ForMember(destination => destination.Id,
-                                               opt => opt.MapFrom(source => source.Id == null
-                                                                      ? null
-                                                                      : hashingService.Decode(source.Id)));
+
         CreateMap<Episode, EpisodeModel>().ForMember(destination => destination.Id,
                                                    opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
         CreateMap<EpisodeModel, Episode>().ForMember(destination => destination.Id,
                                                    opt => opt.MapFrom(source => source.Id == null
                                                                           ? null
                                                                           : hashingService.Decode(source.Id)));
-        CreateMap<TvShow, TvShowDetailsModel>().ForMember(destination => destination.Id,
-                                                 opt => opt.MapFrom(source => hashingService.Encode(source.Id)));
-        CreateMap<TvShowDetailsModel, TvShow>().ForMember(destination => destination.Id,
-                                                 opt => opt.MapFrom(source => source.Id == null
-                                                                        ? null
-                                                                        : hashingService.Decode(source.Id)));
+        CreateMap<TvShow, TvShowDetailsModel>().ForMember(destination => destination.Id, opt => opt.MapFrom(source => hashingService.Encode(source.Id)))
+                                               .ForMember(destination => destination.Genres, opt => opt.MapFrom(source => source.Genres.Select(g => g.Name)))
+                                               .ForMember(destination => destination.FavoriteUsers, opt => opt.Ignore());
+        
+        //CreateMap<TvShowDetailsModel, TvShow>().ForMember(destination => destination.Id,
+        //                                         opt => opt.MapFrom(source => source.Id == null
+        //                                                                ? null
+        //                                                                : hashingService.Decode(source.Id)));
 
         CreateMap<TvShow, TvShowModel>().ForMember(destination => destination.Id,
                                                           opt => opt.MapFrom(source => hashingService.Encode(source.Id)));

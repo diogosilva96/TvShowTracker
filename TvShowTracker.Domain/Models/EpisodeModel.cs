@@ -10,17 +10,16 @@ namespace TvShowTracker.Domain.Models
     {
         public string? Id { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public int Season { get; set; }
+        public int? Season { get; set; }
 
-        public int Number { get; set; }
+        public int? Number { get; set; }
 
         public DateTime? AddedAt { get; set; }
 
         public DateTime? AirDate { get; set; }
 
-        public TvShowDetailsModel Show { get; set; }
         public bool? IsActive { get; set; }
     }
 }

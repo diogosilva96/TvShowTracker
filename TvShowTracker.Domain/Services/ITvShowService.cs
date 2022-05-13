@@ -10,5 +10,7 @@ namespace TvShowTracker.Domain.Services
     public interface ITvShowService
     {
         public Task<Result<IEnumerable<TvShowModel>>> GetAllAsync(GetTvShowsFilter filter);
+
+        public Task<Result<TvShowDetailsModel>> GetByIdAsync(int id);
     }
 }
