@@ -1,8 +1,10 @@
 using System.Text;
 using System.Text.Json;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using TvShowTracker.Api.Extensions;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
 using TvShowTracker.Infrastructure.Utilities;
@@ -25,30 +27,30 @@ namespace TvShowTracker.Api.Controllers
         }
 
         [HttpGet("api/v1/[controller]"), Authorize(Roles = UserRoles.Administrator)]
-        public async Task<IActionResult> GetAllAsync([FromQuery]GetUsersFilter filter)
+        public async Task<IActionResult> GetAllAsync([FromQuery]GetUsersFilter filter, string? export)
         {
             var userInfo = GetAuthenticatedUserInfo();
-            //this might be not the most elegant solution, but hey it works
-            var cacheKey = $"users-get-all-{Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(filter).ToLower()))}";
+            var isExportCsv = !string.IsNullOrEmpty(export) && string.Equals(export, "csv", StringComparison.InvariantCultureIgnoreCase);
+
+            //this might be not the most elegant solution for caching, but hey it works
+            var cacheKey = isExportCsv ?
+            $"users-get-all-export-{export}-{Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(filter).ToLower()))}" :
+            $"users-get-all-{Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(filter).ToLower()))}";
             var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
                 entry.SlidingExpiration = TimeSpan.FromMinutes(1);
                 var result = await _userService.GetAllAsync(userInfo.Id,filter);
-                return result.Success ? Ok(result) : Problem(string.Join(",", result.Errors));
+                return result.ToActionResult(r =>
+                {
+                    if (isExportCsv)
+                    { 
+                        return File(CsvConverter.GetCsvBytes(r), "text/csv",
+                                  $"users_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv");
+                    }
+                    return new OkObjectResult(r);
+                });
             });
             return result;
-        }
-
-        [HttpGet("api/v1/files/csv/[controller]"),Authorize(Roles = UserRoles.Administrator)]
-        public async Task<IActionResult> GetAllToCsvAsync([FromQuery] GetUsersFilter filter)
-        {
-            var userInfo = GetAuthenticatedUserInfo();
-            var result = await _userService.GetAllAsync(userInfo.Id, filter);
-            if (!result.Success)
-            {
-                return Problem(string.Join(",", result.Errors));
-            }
-            return File(CsvConverter.GetCsvBytes(result.Data), "text/csv", $"users_{DateTime.Now.ToString("yyyyMMddHHmmss")}.csv");
         }
 
         [HttpGet("api/v1/[controller]/{id}"), Authorize(Roles = UserRoles.UserOrAdministrator)]
@@ -62,7 +64,7 @@ namespace TvShowTracker.Api.Controllers
 
             var userInfo = GetAuthenticatedUserInfo();
             var result = await _userService.GetByIdAsync(decodedId.Value,userInfo.Id);
-            return result.Success ? Ok(result) : NotFound(result.Errors);
+            return result.ToActionResult();
         }
 
         [HttpGet("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.UserOrAdministrator)]
@@ -76,7 +78,7 @@ namespace TvShowTracker.Api.Controllers
 
             var userInfo = GetAuthenticatedUserInfo();
             var result = await _userService.GetFavoriteShowsAsync(decodedId.Value, userInfo.Id);
-            return result.Success ? Ok(result) : Problem(string.Join(",", result.Errors));
+            return result.ToActionResult();
         }
 
         [HttpPost("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.UserOrAdministrator)]
@@ -97,7 +99,7 @@ namespace TvShowTracker.Api.Controllers
             }
             var userInfo = GetAuthenticatedUserInfo();
             var result = await _userService.AddFavoriteShowsAsync(decodedId.Value, decodedShowIds, userInfo.Id);
-            return result.Success ? Ok() : Problem(string.Join(",", result.Errors));
+            return result.ToActionResult();
         }
 
         [HttpDelete("api/v1/[controller]/{id}/favorite-shows"), Authorize(Roles = UserRoles.UserOrAdministrator)]
@@ -118,7 +120,7 @@ namespace TvShowTracker.Api.Controllers
             }
             var userInfo = GetAuthenticatedUserInfo();
             var result = await _userService.RemoveFavoriteShowsAsync(decodedId.Value, decodedShowIds, userInfo.Id);
-            return result.Success ? Ok() : Problem(string.Join(",", result.Errors));
+            return result.ToActionResult();
         }
 
         [HttpDelete("api/v1/[controller]/{id}"), Authorize(Roles = UserRoles.UserOrAdministrator)]
@@ -132,14 +134,14 @@ namespace TvShowTracker.Api.Controllers
 
             var userInfo = GetAuthenticatedUserInfo();
             var result = await _userService.DeactivateAsync(decodedId.Value, userInfo.Id);
-            return result.Success ? Ok() : Problem(string.Join(",", result.Errors));
+            return result.ToActionResult();
         }
       
         [HttpPost("api/v1/[controller]"), AllowAnonymous]
         public async Task<IActionResult> RegisterAsync(RegisterUserModel registerUser)
         {
-            var createResult = await _userService.RegisterAsync(registerUser);
-            return !createResult.Success ? Problem(string.Join(",",createResult.Errors)) : Ok(createResult);
+            var result = await _userService.RegisterAsync(registerUser);
+            return result.ToActionResult();
         }
 
         

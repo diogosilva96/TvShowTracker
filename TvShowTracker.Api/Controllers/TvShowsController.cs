@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using TvShowTracker.Api.Extensions;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
 
@@ -32,7 +33,7 @@ namespace TvShowTracker.Api.Controllers
                 return await _showService.GetAllAsync(filter);
             });
             //var result = await _showService.GetAllAsync(filter);
-            return result.Success ? Ok(result) : Problem(string.Join(",", result.Errors));
+            return result.ToActionResult();
         }
 
         [HttpGet("api/v1/tv-shows/{id}")]
@@ -51,7 +52,7 @@ namespace TvShowTracker.Api.Controllers
                 return await _showService.GetByIdAsync(numberId.Value);
             });
 
-            return result.Success? Ok(result) : Problem(string.Join(",", result.Errors));
+            return result.ToActionResult();
         }
     }
 }

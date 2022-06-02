@@ -23,9 +23,9 @@ namespace TvShowTracker.Infrastructure.Tests.Validators
             return new PagedFilterValidator();
         }
 
-        [TestCase(null,20, TestName = "When page is null and pageSize has value")]
-        [TestCase(20,null, TestName = "When pageSize is null and page has value")]
-        public async Task Validation_Fails_When_Passing_Invalid_Page_Configuration(int? page,int? pageSize)
+        [TestCase(-1,20, TestName = "When page is negative")]
+        [TestCase(20,501, TestName = "When pageSize is greater than 500")]
+        public async Task Validation_Fails_When_Passing_Invalid_Page_Configuration(int page,int pageSize)
         {
             var filter = new PagedFilter()
             {
@@ -36,13 +36,11 @@ namespace TvShowTracker.Infrastructure.Tests.Validators
            var result = await _underTest.ValidateAsync(filter);
            result.IsValid.Should().BeFalse();
            result.Errors.Should().NotBeNullOrEmpty();
-           result.Errors.ToList()
-                 .Any(e => e.ErrorMessage.Contains("Page size and page must be either both null or not null."));
         }
 
-        [TestCase(null, null, TestName = "When page is null and pageSize is null")]
-        [TestCase(20, 100, TestName = "When pageSize has value and page has value")]
-        public async Task Validation_Fails_When_Passing_Valid_Page_Configuration(int? page, int? pageSize)
+        [TestCase(1, 499)]
+        [TestCase(20, 100)]
+        public async Task Validation_Fails_When_Passing_Valid_Page_Configuration(int page, int pageSize)
         {
             var filter = new PagedFilter()
             {

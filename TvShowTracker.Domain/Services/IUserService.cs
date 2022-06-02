@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LanguageExt.Common;
 using TvShowTracker.Domain.Models;
+using RegisterUserModel = TvShowTracker.Domain.Models.RegisterUserModel;
+using TvShowModel = TvShowTracker.Domain.Models.TvShowModel;
+using UserModel = TvShowTracker.Domain.Models.UserModel;
+
 
 namespace TvShowTracker.Domain.Services
 {

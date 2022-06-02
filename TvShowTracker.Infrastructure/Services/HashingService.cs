@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
-using TvShowTracker.Infrastructure.Helpers;
 
 namespace TvShowTracker.Infrastructure.Services
 {

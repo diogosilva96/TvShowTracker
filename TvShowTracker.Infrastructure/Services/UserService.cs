@@ -2,15 +2,14 @@
 using System.Reflection.Metadata.Ecma335;
 using AutoMapper;
 using FluentValidation;
+using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TvShowTracker.DataAccessLayer;
 using TvShowTracker.DataAccessLayer.Models;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
-using TvShowTracker.Infrastructure.Helpers;
 using TvShowTracker.Infrastructure.Utilities;
-using TvShowTracker.Infrastructure.Validators;
 
 
 namespace TvShowTracker.Infrastructure.Services
@@ -41,14 +40,14 @@ namespace TvShowTracker.Infrastructure.Services
                 var validationResult = await _registerValidator.ValidateAsync(user);
                 if (!validationResult.IsValid)
                 {
-                    return ResultHelper.ToErrorResult<UserModel>(validationResult);
+                    return new Result<UserModel>(new ValidationException(validationResult.Errors));
                 }
 
                 var userWithEmailExists =
                     await _context.Users.AnyAsync(u => u.Email.ToLower() == user.Email.ToLower());
                 if (userWithEmailExists)
                 {
-                    return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "Email is already in use." });
+                    return new Result<UserModel>(new ValidationException("Email is already in use."));
                 }
                 var dbUser = _mapper.Map<User>(user);
                 // add user role by default
@@ -61,12 +60,12 @@ namespace TvShowTracker.Infrastructure.Services
 
                 await _context.SaveChangesAsync();
                 var userModel = _mapper.Map<UserModel>(dbUser);
-                return ResultHelper.ToSuccessResult(userModel);
+                return new Result<UserModel>(userModel);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(RegisterAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<UserModel>(new List<string>() { ex.ToString() });
+                return new Result<UserModel>(ex);
             }
         }
 
@@ -77,36 +76,36 @@ namespace TvShowTracker.Infrastructure.Services
             {
                 if (user.Id is null)
                 {
-                    return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "User not found." });
+                    return new Result<UserModel>(new ValidationException("User not found."));
                 }
                 
                 var validationResult = await _userValidator.ValidateAsync(user);
 
                 if (!validationResult.IsValid)
                 {
-                    return ResultHelper.ToErrorResult<UserModel>(validationResult);
+                    return new Result<UserModel>(new ValidationException(validationResult.Errors));
                 }
 
                 var dbUser = _mapper.Map<User>(user);
                 if (!_context.Users.Any(u => u.Id == dbUser.Id))
                 {
-                    return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "User not found." });
+                    return new Result<UserModel>(new ValidationException("User not found."));
                 }
 
                 if (!_context.Users.Any(u => u.Id == dbUser.Id && u.Email.Equals(user.Email, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "Email cannot be changed." });
+                    return new Result<UserModel>(new ValidationException("Email cannot be changed."));
                 }
 
                 _context.Users.Update(dbUser);
                 await _context.SaveChangesAsync();
 
-                return ResultHelper.ToSuccessResult<UserModel>(_mapper.Map<UserModel>(dbUser));
+                return new Result<UserModel>(_mapper.Map<UserModel>(dbUser));
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(UpdateAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<UserModel>(new List<string>() { ex.ToString() });
+                return new Result<UserModel>(ex);
             }
         }
 
@@ -114,10 +113,10 @@ namespace TvShowTracker.Infrastructure.Services
         {
             if (!await IsSelfOrBelongsToRole(id, requesterId, UserRoles.Administrator))
             {
-                return ResultHelper.ToErrorResult<UserModel>(new List<string>() { "Unauthorized." });
+                return new Result<UserModel>(new ValidationException("Not found"));
             }
             var user = await GetByIdInternalAsync(id);
-            return ResultHelper.ToSuccessResult(_mapper.Map<UserModel>(user));
+            return new Result<UserModel>(_mapper.Map<UserModel>(user));
 
         }
 
@@ -133,22 +132,22 @@ namespace TvShowTracker.Infrastructure.Services
             {
                 if (!await IsSelfOrBelongsToRole(id,requesterId,UserRoles.Administrator))
                 {
-                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "Unauthorized." });
+                    return new Result<bool>(false);
                 }
                 var user = await GetByIdInternalAsync(id);
                 if (user is null)
                 {
-                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "User not found." });
+                    return new Result<bool>(false);
                 }
 
                 user.IsActive = false;
                 await _context.SaveChangesAsync();
-                return ResultHelper.ToSuccessResult(true);
+                return new Result<bool>(true);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(DeactivateAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<bool>(new List<string>() { ex.ToString() });
+                return new Result<bool>(ex);
             }
         }
 
@@ -164,13 +163,13 @@ namespace TvShowTracker.Infrastructure.Services
                 if (await IsInRole(requesterId,UserRoles.User))
                 {
                     // this should never happen as long as the api is configured correctly
-                    return ResultHelper.ToErrorResult<IEnumerable<UserModel>>( new List<string>{ "Not enough permissions" });
+                    return new Result<IEnumerable<UserModel>>(new ValidationException("Not found"));
                 }
 
                 var filterValidation = await _pagedFilterValidator.ValidateAsync(filter);
                 if (!filterValidation.IsValid)
                 {
-                    return ResultHelper.ToErrorResult<IEnumerable<UserModel>> (filterValidation);
+                    return new Result<IEnumerable<UserModel>>(new ValidationException(filterValidation.Errors));
                 }
                 List<User>? users = null;
                 Expression<Func<User, bool>> filterExpression = user =>
@@ -179,21 +178,13 @@ namespace TvShowTracker.Infrastructure.Services
                     (string.IsNullOrEmpty(filter.Email) || user.Email.ToLower() == filter.Email.ToLower()) &&
                     (!filter.IsActive.HasValue || user.IsActive == filter.IsActive);
 
-                if (filter.PageSize is null && filter.Page is null)
-                {
-                    users = await _context.Users.Where(filterExpression)
-                                                .OrderBy(u => u.Id)
-                                                .ToListAsync();
-                }
-
-                if (filter.PageSize is not null && filter.Page is not null)
-                {
+              
                     users = await _context.Users.Where(filterExpression)
                                                 .OrderBy(u=> u.Id)
-                                                .Skip(filter.Page.Value*filter.PageSize.Value)
+                                                .Skip(filter.Page.Value * filter.PageSize.Value)
                                                 .Take(filter.PageSize.Value)
                                                 .ToListAsync();
-                }
+                
                 
                 var userModels = users is not null && users.Any() ? 
                     users.Select(u =>
@@ -202,12 +193,12 @@ namespace TvShowTracker.Infrastructure.Services
                         model.FavoriteShows = null;
                         return model;
                     }) : Enumerable.Empty<UserModel>();
-                return ResultHelper.ToSuccessResult(userModels);
+                return new Result<IEnumerable<UserModel>>(userModels);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}",nameof(GetAllAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<IEnumerable<UserModel>>(new List<string>() { ex.ToString() });
+                return new Result<IEnumerable<UserModel>>(ex);
             }
         }
 
@@ -217,23 +208,23 @@ namespace TvShowTracker.Infrastructure.Services
             {
                 if (!await IsSelfOrBelongsToRole(id, requesterId, UserRoles.Administrator))
                 {
-                    return ResultHelper.ToErrorResult<IEnumerable<TvShowModel>>(new List<string>() {"Unauthorized"});
+                    return new Result<IEnumerable<TvShowModel>>(new ValidationException("Not found"));
                 }
                 var user = await _context.Users
                                          .Include(u=>u.FavoriteShows)
                                          .SingleOrDefaultAsync(u=> u.Id == id);
                 if (user is null)
                 {
-                    return ResultHelper.ToSuccessResult(Enumerable.Empty<TvShowModel>());
+                    return new Result<IEnumerable<TvShowModel>>(Enumerable.Empty<TvShowModel>());
                 }
 
                 var shows = user.FavoriteShows.Select(s => _mapper.Map<TvShowModel>(s));
-                return ResultHelper.ToSuccessResult(shows);
+                return new Result<IEnumerable<TvShowModel>>(shows);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(GetFavoriteShowsAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<IEnumerable<TvShowModel>>(new List<string>() { ex.ToString() });
+                return new Result<IEnumerable<TvShowModel>>(ex);
             }
         }
 
@@ -246,18 +237,18 @@ namespace TvShowTracker.Infrastructure.Services
                 if (requesterId != userId)
                 {
                     // only the self user can add favorites.
-                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "Unauthorized." });
+                    return new Result<bool>(false);
                 }
 
                 var user = await _context.Users.Include(u=>u.FavoriteShows).SingleOrDefaultAsync(u => u.Id == userId);
                 if (user is null)
                 {
-                   return ResultHelper.ToSuccessResult(false);
+                    return new Result<bool>(false);
                 }
 
                 if (user.FavoriteShows.Any() && user.FavoriteShows.All(s => showIds.Contains(s.Id)))
                 {
-                    return ResultHelper.ToSuccessResult(true);
+                    return new Result<bool>(true);
                 }
 
                 var showsToAdd = await _context.Shows
@@ -265,16 +256,16 @@ namespace TvShowTracker.Infrastructure.Services
                                                            .ToListAsync();
                 if (!showsToAdd.Any())
                 {
-                    return ResultHelper.ToSuccessResult(true);
+                    return new Result<bool>(true);
                 }
                 showsToAdd.ForEach(s => user.FavoriteShows.Add(s));
                 await _context.SaveChangesAsync();
-                return ResultHelper.ToSuccessResult(true);
+                return new Result<bool>(true);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(AddFavoriteShowsAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<bool>(new List<string>(){ ex.ToString() });
+                return new Result<bool>(ex);
             }
         }
 
@@ -285,30 +276,31 @@ namespace TvShowTracker.Infrastructure.Services
                 if (requesterId != userId)
                 {
                     // only the self user can remove favorites.
-                    return ResultHelper.ToErrorResult<bool>(new List<string>() { "Unauthorized." });
+                    return new Result<bool>(false);
                 }
 
                 var user = await _context.Users.Include(u => u.FavoriteShows).SingleOrDefaultAsync(u => u.Id == userId);
 
                 if (user is null)
                 {
-                    return ResultHelper.ToSuccessResult(false);
+                    return new Result<bool>(false);
                 }
 
                 var showsToRemove = user.FavoriteShows.Where(s => showIds.Contains(s.Id)).ToList();
                 if (!showsToRemove.Any())
                 {
-                    return ResultHelper.ToSuccessResult(true);
+                    return new Result<bool>(true);
                 }
-
+                
                 showsToRemove.ForEach(s => user.FavoriteShows.Remove(s));
                 await _context.SaveChangesAsync();
-                return ResultHelper.ToSuccessResult(true);
+                
+                return new Result<bool>(true);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(RemoveFavoriteShowsAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<bool>(new List<string>() { ex.ToString() });
+                return new Result<bool>(ex);
             }
         }
     }

@@ -12,13 +12,9 @@ namespace TvShowTracker.Infrastructure.Validators
     {
         public PagedFilterValidator()
         {
-            RuleFor(pf => pf)
-                .Must(IsPageSizeAndPageBothNullOrNotNull)
-                .WithMessage("Page size and page must be either both null or not null.");
+            RuleFor(pf => pf.Page).NotNull().GreaterThanOrEqualTo(0);
+            RuleFor(pf => pf.PageSize).NotNull().LessThanOrEqualTo(500);
         }
 
-        private bool IsPageSizeAndPageBothNullOrNotNull(PagedFilter filter) =>
-            (filter.Page is null && filter.PageSize is null) ||
-            (filter.PageSize is not null && filter.Page is not null);
     }
 }

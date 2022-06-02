@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using AutoMapper;
 using FluentValidation;
+using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TvShowTracker.DataAccessLayer;
 using TvShowTracker.DataAccessLayer.Models;
 using TvShowTracker.Domain.Models;
 using TvShowTracker.Domain.Services;
-using TvShowTracker.Infrastructure.Helpers;
-using TvShowTracker.Infrastructure.Validators;
+
 
 namespace TvShowTracker.Infrastructure.Services
 {
@@ -39,7 +34,7 @@ namespace TvShowTracker.Infrastructure.Services
                 var validationResult = await _pagedFilterValidator.ValidateAsync(filter);
                 if (!validationResult.IsValid)
                 {
-                    return ResultHelper.ToErrorResult<IEnumerable<TvShowModel>>(validationResult);
+                    return new Result<IEnumerable<TvShowModel>>(new ValidationException(validationResult.Errors));
                 }
 
                 Expression<Func<TvShow, bool>> filterExpression = show =>
@@ -51,27 +46,22 @@ namespace TvShowTracker.Infrastructure.Services
                     (!filter.StartDate.HasValue || show.StartDate == filter.StartDate);
 
                 List<TvShow>? shows = null;
-                if (filter.Page is not null && filter.PageSize is not null)
-                {
-                    shows = await _context.Shows.Where(filterExpression)
-                                                                .Skip(filter.Page.Value * filter.PageSize.Value)
-                                                                .Take(filter.PageSize.Value)
-                                                                .ToListAsync();
-                }
-                if (filter.Page is null && filter.PageSize is null)
-                {
-                    shows = await _context.Shows.Where(filterExpression).ToListAsync();
-                }
+                shows = await _context.Shows.Where(filterExpression)
+                                      .Skip(filter.Page.Value * filter.PageSize.Value)
+                                      .Take(filter.PageSize.Value)
+                                      .ToListAsync();
+                
+
                 var showModels = shows is not null && shows.Any() ? 
                     shows.Select(s => _mapper.Map<TvShowModel>(s)) : 
                     Enumerable.Empty<TvShowModel>();
 
-                return ResultHelper.ToSuccessResult(showModels);
+                return new Result<IEnumerable<TvShowModel>>(showModels);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}",nameof(GetAllAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<IEnumerable<TvShowModel>>(new List<string>() { ex.ToString() });
+                return new Result<IEnumerable<TvShowModel>>(ex);
             }
         }
 
@@ -86,17 +76,17 @@ namespace TvShowTracker.Infrastructure.Services
                                          .FirstOrDefaultAsync(s => s.Id == id);
                 if (show == null)
                 {
-                    return ResultHelper.ToErrorResult<TvShowDetailsModel>(new List<string>() { "Show not found."});
+                    return new Result<TvShowDetailsModel>(new ValidationException("Show not found."));
                 }
 
                 var showDetails = _mapper.Map<TvShowDetailsModel>(show);
-                return ResultHelper.ToSuccessResult(showDetails);
+                return new Result<TvShowDetailsModel>(showDetails);
 
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error occurred on {methodName}. Error details {details}", nameof(GetAllAsync), ex.ToString());
-                return ResultHelper.ToErrorResult<TvShowDetailsModel>(new List<string>() { ex.ToString() });
+                return new Result<TvShowDetailsModel>(ex);
             }
         }
     }
